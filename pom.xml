@@ -30,5 +30,12 @@
 			<version>5.3.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.nativelibs4java</groupId>
+			<artifactId>jnaerator-rococoa-runtime</artifactId>
+			<version>0.12</version>
+		</dependency>
+
+
 	</dependencies>
 </project>

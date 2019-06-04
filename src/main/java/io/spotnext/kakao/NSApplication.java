@@ -1,72 +1,99 @@
 package io.spotnext.kakao;
 
-import ca.weblite.objc.Client;
+import java.util.function.Consumer;
+
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.annotations.Msg;
-import io.spotnext.kakao.util.ThreadUtil;
+import io.spotnext.kakao.structs.ActivationPolicy;
+import io.spotnext.kakao.structs.NSImage;
+import io.spotnext.kakao.ui.NSMenu;
+import io.spotnext.kakao.util.Platform;
 
 public class NSApplication extends NSObject {
 
-	protected NSApplicationDelegate delegate;
-	
+	protected NSObject delegate;
+	protected Proxy window;
+
+	protected Consumer<Proxy> applicationDidFinishLaunchingListener;
+
 	protected NSApplication() {
-//		delegate = new NSApplicationDelegate();
+		super("NSApplication");
+
+		// setup default menu
+		var mainMenu = new NSMenu();
+		mainMenu.setAutoenablesItems(true);
+		setMainMenu(mainMenu);
+		setActivationPolicy(ActivationPolicy.regular);
+	}
+
+	@Override
+	protected Proxy init() {
+		return getClient().sendProxy("NSApplication", "sharedApplication");
+	}
+
+	public void setActivationPolicy(ActivationPolicy value) {
+		nativeObject.send("setActivationPolicy:", value.id);
+	}
+
+	public void setMainMenu(NSMenu mainMenu) {
+		nativeObject.send("setMainMenu:", mainMenu.getNativeObject());
 	}
 
 	public static NSApplication sharedApplication() {
 		final var app = new NSApplication();
-		
-		ThreadUtil.performOnMainThread(() -> {
-			var res = Client.getRawClient().sendPointer("NSApplication", "sharedApplication");
-			app.init(res);
-			
-		});
-		
-		app.delegate = new NSApplicationDelegate();
-		app.setDelegate(app.delegate);
 
 		return app;
 	}
 
-	public void setDelegate(Object delegate) {
-		send("setDelegate:", delegate);
+	public void onApplicationDidFinishLaunching(Consumer<Proxy> listener) {
+		applicationDidFinishLaunchingListener = listener;
+	}
+
+	@Msg(selector = "applicationDidFinishLaunching:", like = "NSWindow.setTitle:")
+	public void applicationDidFinishLaunching(Proxy notification) {
+		System.out.println("App did finish launching");
+
+		if (applicationDidFinishLaunchingListener != null) {
+			applicationDidFinishLaunchingListener.accept(notification);
+		}
+	}
+
+	@Msg(selector = "windowDidLoad", like = "NSWindowController.windowDidLoad")
+	public void windowDidLoad() {
+		System.out.println("Window did load");
+	}
+
+	@Msg(selector = "setWindow:", like = "NSSavePanel.setTitle:")
+	public void setWindow(Proxy window) {
+		this.window = window;
+	}
+
+	@Msg(selector = "window", like = "NSObject.description")
+	public Proxy window() {
+		return this.window;
+	}
+
+	public void setDelegate(NSObject delegate) {
+		this.delegate = delegate;
 	}
 
 	public void run() {
-		ThreadUtil.performOnMainThread(() -> {
-			var app = NSApplication.this;
-//			Client.getRawClient().send(NSApplication.this.parent, "setDelegate:", app.parent);
-			Client.getRawClient().send(NSApplication.this.parent, "run");
-		});
+		nativeObject.send("setDelegate:", delegate != null ? delegate : this);
+		nativeObject.send("run");
 	}
 
-	public static class NSApplicationDelegate extends NSObject {
-		protected Proxy window;
+	public void setApplicationName(String name) {
+		Platform.MAC_OS.setProcessName(name);
+	}
 
-		public NSApplicationDelegate() {
-//			super("NSApplicationDelegate");
-			super();
-		}
+	public void setApplicationIconImage(String iconPath) {
+		var image = new NSImage();
+		image.initByReferencingFile(iconPath);
 
-		@Msg(selector = "applicationDidFinishLaunching:", like = "NSWindow.setTitle:")
-		public void applicationDidFinishLaunching(Proxy notification) {
-			System.out.println("App did finish launching");
-		}
+		nativeObject.send("setApplicationIconImage:", image.getNativeObject());
+	}
 
-		@Msg(selector = "windowDidLoad", like = "NSWindowController.windowDidLoad")
-		public void windowDidLoad() {
-			System.out.println("Window did load");
-		}
-
-		@Msg(selector = "setWindow:", like = "NSSavePanel.setTitle:")
-		public void setWindow(Proxy window) {
-			this.window = window;
-		}
-
-		@Msg(selector = "window", like = "NSObject.description")
-		public Proxy window() {
-			return this.window;
-		}
-
+	public void activateIgnoringOtherApps(boolean value) {
+		nativeObject.send("activateIgnoringOtherApps:", value);
 	}
 }

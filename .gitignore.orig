@@ -1,4 +1,6 @@
+<<<<<<< HEAD
 target
+=======
 # Compiled class file
 *.class
 
@@ -22,3 +24,4 @@ target
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+>>>>>>> 7155d962a31661f889385e7cdff54ccc978a4386
