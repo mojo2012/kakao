@@ -30,6 +30,11 @@ public class NSImage extends NSObject {
 		return this;
 	}
 	
+	public NSImage initWithData(NSData data) {
+		nativeObject.send("initWithData:", data.getNativeObject());
+		return this;
+	}
+	
 	public static NSImage imageNamed(NSImageName name) {
 		var proxy = Client.getInstance().sendProxy("NSImage", "imageNamed:", NSString.stringWith(name.id).getNativeObject());
 		
