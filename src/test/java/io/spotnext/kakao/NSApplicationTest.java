@@ -3,6 +3,8 @@ package io.spotnext.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.spotnext.kakao.structs.NSImage;
+import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
 import io.spotnext.kakao.ui.NSToolbar;
 import io.spotnext.kakao.ui.NSToolbarItem;
@@ -38,16 +40,15 @@ public class NSApplicationTest {
 	public static NSToolbar createToolbar() {
 		var toolbar = new NSToolbar();
 
-		var item = new NSToolbarItem().initWithItemIdentifier("item");
+		var item = new NSToolbarItem().initWithItemIdentifier("item1");
 		item.setAction(i -> LOG.info("Clicked"));
 		item.setLabel("Test");
 		item.setToolTip("Tooltip");
 		item.setTag(0);
+		item.setImage(NSImage.imageNamed(NSImageName.MobileMe));
 
-//		toolbar.getItems();
-
-//		toolbar.insertItem(item, 0);
-		toolbar.insertItemWithItemIdentifier("item1", 0);
+		toolbar.insertItem(item, 0);
+		toolbar.insertItemWithItemIdentifier("item2", 0);
 
 		return toolbar;
 	}

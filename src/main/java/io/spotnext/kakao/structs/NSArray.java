@@ -13,9 +13,13 @@ public class NSArray<T> extends NSObject {
 		this.nativeObject = proxy;
 	}
 
-	public static NSArray fromProxy(Proxy proxy) {
-		var obj = new NSArray(proxy);
+	public static <T> NSArray<T> fromProxy(Proxy proxy) {
+		var obj = new NSArray<T>(proxy);
 		return obj;
+	}
+	
+	public T[] toArray() {
+		return null;
 	}
 
 	@Override

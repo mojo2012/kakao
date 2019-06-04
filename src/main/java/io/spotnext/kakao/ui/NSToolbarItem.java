@@ -90,8 +90,8 @@ public class NSToolbarItem extends NSObject {
 		nativeObject.send("setTarget:", nsToolbar.getNativeObject());
 	}
 
-	public void setToolbar(NSToolbar nsToolbar) {
-		nativeObject.send("setToolbar:", nsToolbar.getNativeObject());
-	}
+//	public void setToolbar(NSToolbar nsToolbar) {
+//		nativeObject.send("setToolbar:", nsToolbar.getNativeObject());
+//	}
 
 }
