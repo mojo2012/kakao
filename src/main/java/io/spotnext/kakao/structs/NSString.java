@@ -1,14 +1,17 @@
 package io.spotnext.kakao.structs;
 
-import com.sun.jna.Pointer;
-
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 
 public class NSString extends NSObject {
 	public NSString() {
-		super("NSString");
+		super("NSString", true);
+	}
+	
+	public NSString(Proxy proxy) {
+		super("NSString", false);
+		this.nativeObject = proxy;
 	}
 
 	@Override
@@ -18,6 +21,11 @@ public class NSString extends NSObject {
 		return obj;
 	}
 
+	public static NSString fromProxy(Proxy proxy) {
+		var obj = new NSString(proxy);
+		return obj;
+	}
+	
 	public static NSString stringWith(String string) {
 		char[] buffer = new char[string.length()];
 		string.getChars(0, buffer.length, buffer, 0);
@@ -39,5 +47,9 @@ public class NSString extends NSObject {
 	@Override
 	public String toString() {
 		return nativeObject.toString();
+	}
+
+	public String toUTF8String() {
+		return nativeObject.sendString("UTF8String");
 	}
 }
