@@ -87,8 +87,7 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setApplicationIconImage(String iconPath) {
-		var image = new NSImage();
-		image.initByReferencingFile(iconPath);
+		var image = NSImage.fromFile(iconPath);
 
 		nativeObject.send("setApplicationIconImage:", image.getNativeObject());
 	}

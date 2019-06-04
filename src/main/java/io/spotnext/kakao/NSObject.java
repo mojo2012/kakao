@@ -30,7 +30,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 
 	protected Proxy init() {
 		var obj = getClient().sendProxy(nsClassName, SELECTOR_ALLOC);
-		obj.send(SELECTOR_INIT);
+		obj = obj.sendProxy(SELECTOR_INIT);
 
 		return obj;
 	}

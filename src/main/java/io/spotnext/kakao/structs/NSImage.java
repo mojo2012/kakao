@@ -14,7 +14,12 @@ public class NSImage extends NSObject {
 		return getClient().sendProxy(nsClassName, SELECTOR_ALLOC);
 	}
 
-	public void initByReferencingFile(String iconPath) {
+	public static NSImage fromFile(String iconPath) {
+		return new NSImage().initByReferencingFile(iconPath);
+	}
+	
+	public NSImage initByReferencingFile(String iconPath) {
 		nativeObject.send("initByReferencingFile:", iconPath);
+		return this;
 	}
 }

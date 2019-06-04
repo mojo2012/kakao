@@ -40,10 +40,14 @@ public class NSApplicationTest {
 
 		var item = new NSToolbarItem().initWithItemIdentifier("item");
 		item.setAction(i -> LOG.info("Clicked"));
+		item.setLabel("Test");
+		item.setToolTip("Tooltip");
+		item.setTag(0);
 
-		toolbar.getItems();
+//		toolbar.getItems();
 
-		toolbar.insertItem(item, 0);
+//		toolbar.insertItem(item, 0);
+		toolbar.insertItemWithItemIdentifier("item1", 0);
 
 		return toolbar;
 	}
