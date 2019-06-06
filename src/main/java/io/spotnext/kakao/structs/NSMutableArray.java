@@ -1,10 +1,14 @@
 package io.spotnext.kakao.structs;
 
-import io.spotnext.kakao.NSObject;
+import ca.weblite.objc.Proxy;
 
-public class NSMutableArray<T> extends NSObject {
-	public NSMutableArray() {
-		super("NSMutableArray");
+public class NSMutableArray<T> extends NSArray<T> {
+	public NSMutableArray(Class<T> elementType) {
+		super("NSMutableArray", elementType);
+	}
+
+	protected NSMutableArray(Proxy proxy, Class<T> elementType) {
+		super(proxy, elementType);
 	}
 
 	public void addObject(T object) {
@@ -12,14 +16,14 @@ public class NSMutableArray<T> extends NSObject {
 			nativeObject.send("addObject:", object);
 		}
 	}
-	
+
 	public void removeObject(T object) {
 		nativeObject.send("removeObject:", object);
 	}
-	
-	public NSArray copy() {
+
+	public NSArray<T> copy() {
 		var proxy = nativeObject.sendProxy("copy");
-		
-		return NSArray.fromProxy(proxy);
+
+		return new NSArray<T>(proxy, elementType);
 	}
 }

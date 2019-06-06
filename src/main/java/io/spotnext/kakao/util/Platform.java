@@ -24,7 +24,7 @@ public interface Platform {
 		}
 
 		public void setProcessName(String name) {
-			var str = NSString.stringWith(name);
+			var str = new NSString(name);
 
 			var utf8String = (Long) str.getNativeObject().sendRaw("UTF8String");
 

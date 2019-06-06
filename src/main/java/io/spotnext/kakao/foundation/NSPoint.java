@@ -19,6 +19,7 @@
 
 package io.spotnext.kakao.foundation;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import org.rococoa.cocoa.CGFloat;
 
@@ -33,6 +34,11 @@ public class NSPoint extends Structure implements Structure.ByValue {
     public CGFloat x;
     public CGFloat y;
 
+    public NSPoint(Pointer pointer) {
+    	super(pointer);
+    	read();
+    }
+    
     public NSPoint() {
         this(0, 0);
     }

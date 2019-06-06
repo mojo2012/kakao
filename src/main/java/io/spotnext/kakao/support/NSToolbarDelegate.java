@@ -12,31 +12,33 @@ public interface NSToolbarDelegate {
 	 * itemIdentifier if it exists. Otherwise a new empty item is created and registered.
 	 * 
 	 * @param toolbar
-	 * @param itemIdentifier
+	 * @param itemIdentifier can be a {@link NSString} or a {@link String}
 	 * @param index
 	 * @param willBeInsertedIntoToolbar
 	 * @return
 	 */
-	Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Long toolbar, Proxy itemIdentifier, Long index, Boolean willBeInsertedIntoToolbar);
+	Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Long toolbar, Object itemIdentifier, Long index, Boolean willBeInsertedIntoToolbar);
 
 	/**
 	 * Note: why is there no toolbar argument supported?
 	 * 
-	 * @return Returns an {@link NSArray} of {@link NSString}s with the selectable item identifiers.
+	 * @return Returns an {@link NSArray} of {@link NSString}s with the selectable item identifiers. Selectable in this case means that the item will be handled
+	 * as some sort of "checkbox" like item.
 	 */
-	Proxy toolbarSelectableItemIdentifiers(Proxy toolbar);
+	Proxy toolbarSelectableItemIdentifiers();
 
 	/**
 	 * Note: why is there no toolbar argument supported?
 	 * 
-	 * @return Returns an {@link NSArray} of {@link NSString}s with the allowed item identifiers.
+	 * @return Returns an {@link NSArray} of {@link NSString}s with the allowed item identifiers. These items are in the customization palette but by default
+	 * not on the toolbar itself
 	 */
 	Proxy toolbarAllowedItemIdentifiers();
 
 	/**
 	 * Note: why is there no toolbar argument supported?
 	 * 
-	 * @return Returns an {@link NSArray} of {@link NSString}s item identifiers that are on the toolbar by default.
+	 * @return Returns an {@link NSArray} of {@link NSString}s item identifiers that are visible on the toolbar by default.
 	 */
 	Proxy toolbarDefaultItemIdentifiers();
 

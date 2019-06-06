@@ -1,43 +1,30 @@
 package io.spotnext.kakao.structs;
 
-import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 
 public class NSImage extends NSObject {
 
-	public NSImage() {
-		super("NSImage");
-	}
-	
-	protected NSImage(Proxy proxy) {
+	public NSImage(String imagePath) {
 		super("NSImage", false);
-		
-		nativeObject = proxy;
+
+		initWithProxy(init(alloc("NSImage", SELECTOR_ALLOC), "initByReferencingFile:", imagePath));
 	}
 
-	@Override
-	protected Proxy init() {
-		return getClient().sendProxy(nsClassName, SELECTOR_ALLOC);
+	public NSImage(NSImageName name) {
+		super("NSImage", false);
+
+		initWithProxy(alloc("NSImage", "imageNamed:", new NSString(name.id).getNativeObject()));
 	}
 
-	public static NSImage fromFile(String iconPath) {
-		return new NSImage().initByReferencingFile(iconPath);
+	public NSImage(NSData data) {
+		super("NSImage", false);
+
+		initWithProxy(init(alloc("NSImage", SELECTOR_ALLOC), "initWithData:", data.getNativeObject()));
 	}
-	
-	public NSImage initByReferencingFile(String iconPath) {
-		nativeObject.send("initByReferencingFile:", iconPath);
-		return this;
+
+	public NSImage(Proxy proxy) {
+		super(proxy);
 	}
-	
-	public NSImage initWithData(NSData data) {
-		nativeObject.send("initWithData:", data.getNativeObject());
-		return this;
-	}
-	
-	public static NSImage imageNamed(NSImageName name) {
-		var proxy = Client.getInstance().sendProxy("NSImage", "imageNamed:", NSString.stringWith(name.id).getNativeObject());
-		
-		return new NSImage(proxy);
-	}
+
 }

@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
+import io.spotnext.kakao.ui.NSButton;
+import io.spotnext.kakao.ui.NSSearchField;
+import io.spotnext.kakao.ui.NSSplitView;
 import io.spotnext.kakao.ui.NSToolbar;
 import io.spotnext.kakao.ui.NSToolbarItem;
 import io.spotnext.kakao.ui.NSWindow;
@@ -21,12 +24,14 @@ public class NSApplicationTest {
 			app.setApplicationIconImage("/Applications/Development/Eclipse.app/Contents/Resources/Eclipse.icns");
 			app.setApplicationName("Test Application");
 
-			final var window = new NSWindow().initWithDefaults();
+			final var window = new NSWindow();
 			window.setTitle("test");
 			window.setTitleVisibility(NSWindowTitleVisibility.hidden);
-			window.center();
-
 			window.setToolbar(createToolbar());
+
+			createSplitPane(window);
+
+			window.center();
 
 			app.onApplicationDidFinishLaunching(p -> {
 				app.activateIgnoringOtherApps(true);
@@ -37,19 +42,62 @@ public class NSApplicationTest {
 		});
 	}
 
+	private static void createSplitPane(NSWindow window) {
+//		var splitView = new NSSplitView(window.contentView().bounds());
+//
+//		var button1 = new NSButton("test");
+//		var button2 = new NSButton("test2");
+//
+//		splitView.addSubview(button1);
+//		splitView.addSubview(button2);
+
+//		window.addSubview(splitView);
+	}
+
 	public static NSToolbar createToolbar() {
 		var toolbar = new NSToolbar();
 
-		var item = new NSToolbarItem().initWithItemIdentifier("item1");
-		item.setAction(i -> LOG.info("Clicked"));
+		int itemIndex = 0;
+
+		var runButtonItem = new NSToolbarItem("runButtonItem");
+		runButtonItem.setLabel("Run");
+		runButtonItem.setToolTip("Run Run Run!!!");
+		runButtonItem.setView(new NSButton(NSImageName.ShareTemplate));
+		toolbar.insertItem(runButtonItem, itemIndex++);
+
+		var flexSpacer = NSToolbarItem.FLEXIBLE_SPACER;
+		flexSpacer.setVisible(true);
+		toolbar.insertItem(flexSpacer, itemIndex++);
+
+		var searchFieldItem = new NSToolbarItem("searchFieldItem");
+		searchFieldItem.setLabel("Search");
+		searchFieldItem.setToolTip("Search");
+		searchFieldItem.setView(new NSSearchField());
+		toolbar.insertItem(searchFieldItem, itemIndex++);
+
+		// add an empty generic toolbar item
+		toolbar.insertItemWithItemIdentifier("item2", itemIndex++);
+
+		var item = new NSToolbarItem("item1");
+		item.setAction(NSApplicationTest::onToolbarAction);
 		item.setLabel("Test");
 		item.setToolTip("Tooltip");
-		item.setTag(0);
-		item.setImage(NSImage.imageNamed(NSImageName.MobileMe));
+		item.setVisible(false);
+		item.setImage(new NSImage(NSImageName.MobileMe));
+		toolbar.insertItem(item, itemIndex++);
 
-		toolbar.insertItem(item, 0);
-		toolbar.insertItemWithItemIdentifier("item2", 0);
+		var spacer = NSToolbarItem.FIXED_SPACER;
+		spacer.setVisible(false);
+		toolbar.insertItem(spacer, itemIndex++);
+
+		var separator = NSToolbarItem.SEPARATOR;
+		separator.setVisible(false);
+		toolbar.insertItem(separator, itemIndex++);
 
 		return toolbar;
+	}
+
+	private static void onToolbarAction(NSToolbarItem item) {
+		LOG.info("Test");
 	}
 }

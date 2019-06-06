@@ -6,42 +6,26 @@ import io.spotnext.kakao.NSObject;
 
 public class NSString extends NSObject {
 	public NSString() {
-		super("NSString", true);
-	}
-	
-	public NSString(Proxy proxy) {
 		super("NSString", false);
-		this.nativeObject = proxy;
+
+		initWithProxy(alloc("NSString", "string"));
 	}
 
-	@Override
-	protected Proxy init() {
-		var obj = getClient().sendProxy(nsClassName, "string");
+	public NSString(String initialString) {
+		super("NSString", false);
 
-		return obj;
-	}
+		char[] buffer = new char[initialString.length()];
+		initialString.getChars(0, buffer.length, buffer, 0);
 
-	public static NSString fromProxy(Proxy proxy) {
-		var obj = new NSString(proxy);
-		return obj;
-	}
-	
-	public static NSString stringWith(String string) {
-		char[] buffer = new char[string.length()];
-		string.getChars(0, buffer.length, buffer, 0);
-		return stringWithCharacters(buffer, (long) buffer.length);
-	}
-
-	public static NSString stringWithCharacters(char[] characters, long length) {
-		var ret = new NSString();
-		
 		// this is weird but it's the only way I managed to get it working, every other way cause casting exceptions (String/Long to Proxy etc)
 		// there seems to be problem with the coarsing
-		var pointer = Client.getRawClient().sendPointer("NSString", "stringWithCharacters:length:", characters, length);
-		var proxy = new Proxy(pointer);
-		ret.nativeObject = proxy;
-		
-		return ret;
+		var pointer = Client.getRawClient().sendPointer("NSString", "stringWithCharacters:length:", buffer, (long) buffer.length);
+
+		initWithProxy(new Proxy(pointer));
+	}
+
+	public NSString(Proxy proxy) {
+		super(proxy);
 	}
 
 	@Override

@@ -19,6 +19,7 @@
 
 package io.spotnext.kakao.foundation;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import org.rococoa.cocoa.CGFloat;
 
@@ -29,6 +30,11 @@ import java.util.List;
 public class NSSize extends Structure implements Structure.ByValue {
 	public CGFloat width;
 	public CGFloat height;
+
+	public NSSize(Pointer pointer) {
+		super(pointer);
+		read();
+	}
 
 	public NSSize() {
 		this(0, 0);
@@ -46,7 +52,7 @@ public class NSSize extends Structure implements Structure.ByValue {
 	public static NSSize of(double width, double height) {
 		return new NSSize(width, height);
 	}
-	
+
 	@Override
 	protected List<String> getFieldOrder() {
 		return Arrays.asList("width", "height");

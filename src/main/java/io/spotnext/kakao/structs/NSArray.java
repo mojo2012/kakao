@@ -1,49 +1,53 @@
 package io.spotnext.kakao.structs;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.List;
 
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 
 public class NSArray<T> extends NSObject {
-	public NSArray() {
-		super("NSArray", true);
+
+	protected Class<T> elementType = null;
+
+	public NSArray(Class<T> elementType) {
+		this("NSArray", elementType);
 	}
 
-	public NSArray(Proxy proxy) {
-		super("NSArray", false);
-		this.nativeObject = proxy;
+	protected NSArray(String className, Class<T> elementType) {
+		this(className, false, elementType);
 	}
 
-	public static <T> NSArray<T> fromProxy(Proxy proxy) {
-		var obj = new NSArray<T>(proxy);
-		return obj;
+	protected NSArray(String className, boolean init, Class<T> elementType) {
+		super(className, init);
+		this.elementType = elementType;
+
+		initWithProxy(alloc(className, "array"));
 	}
 
-	// TODO: type cast
-	public Proxy[] toArray() {
-		List<Proxy> items = new ArrayList<>();
+	public NSArray(Proxy proxy, Class<T> elementType) {
+		super(proxy);
+		this.elementType = elementType;
+	}
+
+	public T[] toArray() {
+		var items = new ArrayList<T>();
 		int count = count();
 		for (var i = 0; i < count; i++) {
 			items.add(objectAtIndex(i));
 		}
 
-		return items.toArray(new Proxy[count]);
+		return (T[]) items.toArray();
 	}
 
-	// TODO: type cast
-	public Proxy objectAtIndex(int index) {
-		return nativeObject.sendProxy("objectAtIndex:", index);
+	public T objectAtIndex(int index) {
+		var proxy = nativeObject.sendProxy("objectAtIndex:", index);
+
+		return constructElementWrapper(proxy, elementType);
 	}
 
 	public int count() {
 		return nativeObject.sendInt("count");
-	}
-
-	@Override
-	protected Proxy init() {
-		return getClient().sendProxy("NSArray", "array");
 	}
 
 }

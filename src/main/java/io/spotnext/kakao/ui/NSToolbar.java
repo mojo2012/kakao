@@ -1,9 +1,12 @@
 package io.spotnext.kakao.ui;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.annotations.Msg;
@@ -18,23 +21,18 @@ import io.spotnext.kakao.support.NSToolbarDelegate;
 
 public class NSToolbar extends NSObject implements NSToolbarDelegate {
 
-	private static final Map<String, NSToolbarItem> items = new LinkedHashMap<>();
+	private final Map<String, NSToolbarItem> items = new LinkedHashMap<>();
+	private final Set<String> defaultItemIdentifiers = new LinkedHashSet<>();
 
 	public NSToolbar() {
-		super("NSToolbar");
+		super("NSToolbar", false);
+
+		initWithProxy(init(alloc("NSToolbar", SELECTOR_ALLOC), "initWithIdentifier:", new NSString("mainToolbar").getNativeObject()));
 
 		setAllowsUserCustomization(true);
 		setAutosavesConfiguration(true);
 		setDisplayMode(NSToolbarDisplayMode.IconAndLabel);
 		setDelegate(this);
-	}
-
-	@Override
-	protected Proxy init() {
-		var obj = getClient().sendProxy(nsClassName, SELECTOR_ALLOC);
-		obj = obj.sendProxy("initWithIdentifier:", NSString.stringWith("mainToolbar").getNativeObject());
-
-		return obj;
 	}
 
 	public void setAllowsUserCustomization(boolean value) {
@@ -59,6 +57,9 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 		var itemIdentifier = item.getIdentifier();
 		items.put(itemIdentifier, item);
 
+		if (item.isVisible()) {
+			defaultItemIdentifiers.add(itemIdentifier);
+		}
 	}
 
 	/**
@@ -72,10 +73,9 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	public NSArray<NSToolbarItem> getItems() {
-		var nsArray = io.spotnext.kakao.structs.NSArray.fromProxy(nativeObject.sendProxy("items"));
-		var array = NSArray.<NSToolbarItem>fromProxy(nsArray);
+		var nsArray = new NSArray<>(nativeObject.sendProxy("items"), NSToolbarItem.class);
 
-		return array;
+		return nsArray;
 	}
 
 	public void setDelegate(NSObject delegate) {
@@ -83,20 +83,19 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	@Override
-	@Msg(selector = "toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:", signature = "@:@:@:B")
-	public Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Long toolbar, Proxy itemIdentifier, Long index, Boolean willBeInsertedIntoToolbar) {
-		var identifier = NSString.fromProxy(itemIdentifier);
-		var itemId = identifier.toUTF8String();
+	@Msg(selector = "toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:", signature = "@:*:@:B")
+	public Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Long toolbar, Object itemIdentifier, Long index, Boolean willBeInsertedIntoToolbar) {
+		// toString of an NSString is the actual string ;-) weird ...
+		var itemId = itemIdentifier.toString();
+
 		var item = items.get(itemId);
 
 		if (item == null) {
-			item = new NSToolbarItem().initWithItemIdentifier(itemId);
+			defaultItemIdentifiers.add(itemId);
+			item = new NSToolbarItem(itemId);
 			item.setLabel("<unnamed>");
 			item.paletteLabel("<unnamed>");
-			item.setTarget(this);
-			item.setAction(null);
-			item.setEnabled(true);
-			item.setImage(NSImage.imageNamed(NSImageName.Info));
+			item.setImage(new NSImage(NSImageName.Info));
 
 			items.put(itemId, item);
 		}
@@ -111,12 +110,24 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 		items.remove(id);
 	}
 
+	public NSToolbarItem selectedItemIdentifier() {
+		var id = nativeObject.sendProxy("selectedItemIdentifier");
+
+		if (id != null) {
+			return items.get(id.toString());
+		}
+
+		return null;
+	}
+
 	@Override
 	@Msg(selector = "toolbarDefaultItemIdentifiers:", signature = "@:@")
 	public Proxy toolbarDefaultItemIdentifiers() {
-		var identifiers = new NSMutableArray<String>();
-		identifiers.addObject("item1");
-		identifiers.addObject("item2");
+		var identifiers = new NSMutableArray<String>(String.class);
+
+		for (var id : defaultItemIdentifiers) {
+			identifiers.addObject(id);
+		}
 
 		return identifiers.getNativeObject();
 	}
@@ -124,23 +135,64 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	@Override
 	@Msg(selector = "toolbarAllowedItemIdentifiers:", signature = "@:@")
 	public Proxy toolbarAllowedItemIdentifiers() {
-		return toolbarDefaultItemIdentifiers();
+		var identifiers = new NSMutableArray<String>(String.class);
+
+		for (var id : defaultItemIdentifiers) {
+			identifiers.addObject(id);
+		}
+
+		identifiers.addObject(NSToolbarItem.SUBCLASS_CUSTOMIZE_TOOLBAR);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_FLEXIBLE_SPACE);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_FIXED_SPACE);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_SEPARATOR);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_SHOW_COLORS);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_SHOW_FONTS);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_CUSTOMIZE_TOOLBAR);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_SHOW_PRINT);
+		identifiers.addObject(NSToolbarItem.SUBCLASS_TOGGLE_SIDEBAR);
+
+		return identifiers.getNativeObject();
 	}
 
 	@Override
 	@Msg(selector = "toolbarSelectableItemIdentifiers:", signature = "@:@")
-	public Proxy toolbarSelectableItemIdentifiers(Proxy toolbar) {
-		return toolbarDefaultItemIdentifiers();
+	public Proxy toolbarSelectableItemIdentifiers() {
+		return null;
 	}
 
 	@Msg(selector = "toolbarWillAddItem:", signature = "v@:@")
-	public void toolbarWillAddItem(Proxy notification) {
-
+	public void toolbarWillAddItem(Proxy itemIdentifier) {
+		setToolbarItemVisible(itemIdentifier, true);
 	}
 
 	@Msg(selector = "toolbarDidRemoveItem:", signature = "v@:@")
-	public void toolbarDidRemoveItem(Proxy notification) {
+	public void toolbarDidRemoveItem(Proxy itemIdentifier) {
+		setToolbarItemVisible(itemIdentifier, false);
+	}
 
+	/**
+	 * Update the visibility if the item is removed or added from the toolbar
+	 * 
+	 * @param itemIdentifier
+	 * @param value
+	 */
+	private void setToolbarItemVisible(Proxy itemIdentifier, boolean value) {
+		var id = itemIdentifier.toString();
+		Optional.ofNullable(items.get(id)).ifPresent(i -> i.setVisible(value));
+	}
+
+	/**
+	 * Sets the given event listener to the item's {@link NSToolbarItem#setAction(Consumer)} event action. This is just a convenience method.
+	 * 
+	 * @param itemIdentifier
+	 * @param listener
+	 */
+	public void onToolbarAction(String itemIdentifier, Consumer<NSToolbarItem> listener) {
+		var item = items.get(itemIdentifier);
+
+		if (item != null) {
+			item.setAction(listener);
+		}
 	}
 
 }

@@ -17,18 +17,15 @@ public class NSApplication extends NSObject {
 	protected Consumer<Proxy> applicationDidFinishLaunchingListener;
 
 	protected NSApplication() {
-		super("NSApplication");
+		super("NSApplication", false);
+
+		initWithProxy(alloc("NSApplication", "sharedApplication"));
 
 		// setup default menu
 		var mainMenu = new NSMenu();
 		mainMenu.setAutoenablesItems(true);
 		setMainMenu(mainMenu);
 		setActivationPolicy(ActivationPolicy.regular);
-	}
-
-	@Override
-	protected Proxy init() {
-		return getClient().sendProxy("NSApplication", "sharedApplication");
 	}
 
 	public void setActivationPolicy(ActivationPolicy value) {
@@ -87,7 +84,7 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setApplicationIconImage(String iconPath) {
-		var image = NSImage.fromFile(iconPath);
+		var image = new NSImage(iconPath);
 
 		nativeObject.send("setApplicationIconImage:", image.getNativeObject());
 	}
