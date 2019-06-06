@@ -21,6 +21,9 @@ package io.spotnext.kakao.foundation;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+
+import ca.weblite.objc.Proxy;
+
 import org.rococoa.cocoa.CGFloat;
 
 import java.awt.geom.Point2D;
@@ -37,6 +40,10 @@ public class NSPoint extends Structure implements Structure.ByValue {
     public NSPoint(Pointer pointer) {
     	super(pointer);
     	read();
+    }
+    
+    public NSPoint(Proxy proxy) {
+        this((double) proxy.get("x"), (double) proxy.get("y"));
     }
     
     public NSPoint() {

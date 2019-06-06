@@ -3,6 +3,7 @@ package io.spotnext.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
@@ -43,15 +44,18 @@ public class NSApplicationTest {
 	}
 
 	private static void createSplitPane(NSWindow window) {
-//		var splitView = new NSSplitView(window.contentView().bounds());
-//
-//		var button1 = new NSButton("test");
-//		var button2 = new NSButton("test2");
-//
-//		splitView.addSubview(button1);
-//		splitView.addSubview(button2);
+		var bounds = window.contentViewFrame();
+		
+//		var splitView = new NSSplitView(bounds);
+		var splitView = new NSSplitView(new NSRect(0, 0, 100, 100));
 
-//		window.addSubview(splitView);
+		var button1 = new NSButton("test");
+		var button2 = new NSButton("test2");
+
+		splitView.addSubview(button1);
+		splitView.addSubview(button2);
+
+		window.addSubview(splitView);
 	}
 
 	public static NSToolbar createToolbar() {

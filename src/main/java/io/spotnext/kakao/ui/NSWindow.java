@@ -84,10 +84,15 @@ public class NSWindow extends NSView {
 	protected Proxy contentViewInternal() {
 		return nativeObject.sendProxy("contentView");
 	}
+	
+	public NSRect frame() {
+		var pointer = nativeObject.sendProxy("frame").getPeer();
+		return new NSRect(pointer).copy();
+	}
 
-//	@Override
-//	public void addSubview(NSView view) {
-//		addSubview(view);
-//	}
+	@Override
+	public void addSubview(NSView view) {
+		contentViewInternal().send("addSubview:", view.getNativeObject());
+	}
 
 }

@@ -21,6 +21,9 @@ package io.spotnext.kakao.foundation;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+
+import ca.weblite.objc.Proxy;
+
 import org.rococoa.cocoa.CGFloat;
 
 import java.awt.geom.Dimension2D;
@@ -34,6 +37,10 @@ public class NSSize extends Structure implements Structure.ByValue {
 	public NSSize(Pointer pointer) {
 		super(pointer);
 		read();
+	}
+
+	public NSSize(Proxy proxy) {
+		
 	}
 
 	public NSSize() {

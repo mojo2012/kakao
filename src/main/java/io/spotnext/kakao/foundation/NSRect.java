@@ -28,6 +28,8 @@ import java.util.List;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
+import ca.weblite.objc.Proxy;
+
 /**
  * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
  */
@@ -38,6 +40,11 @@ public class NSRect extends Structure implements Structure.ByValue, Cloneable {
 	public NSRect(Pointer pointer) {
 		super(pointer);
 		read();
+	}
+	
+	public NSRect(Proxy proxy) {
+		this.origin = new NSPoint(proxy.getProxy("origin"));
+		this.size = new NSSize(proxy.getProxy("size"));
 	}
 
 	public NSRect() {

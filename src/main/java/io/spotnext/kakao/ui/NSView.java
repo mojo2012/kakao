@@ -47,8 +47,13 @@ public class NSView extends NSObject {
 		nativeObject.send("setFrameSize:", size);
 	}
 
-	public NSRect bounds() {
-		var pointer = new Pointer((long) nativeObject.send("bounds"));
+	public NSRect contentViewFrame() {
+		var proxy = nativeObject.getProxy("contentView").getProxy("frame").getPeer();
+		return new NSRect(proxy);
+	}
+	
+	public NSRect frame() {
+		var pointer = nativeObject.getProxy("frame").getPeer();
 		return new NSRect(pointer).copy();
 	}
 
