@@ -1,15 +1,15 @@
 package io.spotnext.kakao.structs;
 
 public enum NSWindowTitleVisibility {
-	visible(0), hidden(1);
+	Visible(0), Hidden(1);
 
-	private int code;
+	private final int id;
 
 	private NSWindowTitleVisibility(int code) {
-		this.code = code;
+		this.id = code;
 	}
 
 	public int getCode() {
-		return code;
+		return id;
 	}
 }

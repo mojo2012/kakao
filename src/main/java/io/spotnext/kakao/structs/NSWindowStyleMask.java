@@ -7,7 +7,7 @@ public enum NSWindowStyleMask {
 	Miniaturizable(1 << 2),
 	Resizable(1 << 3);
 
-	public long id;
+	public final long id;
 
 	private NSWindowStyleMask(long id) {
 		this.id = id;

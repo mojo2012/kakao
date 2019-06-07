@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
+import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
+import io.spotnext.kakao.structs.Orientation;
 import io.spotnext.kakao.ui.NSButton;
 import io.spotnext.kakao.ui.NSSearchField;
 import io.spotnext.kakao.ui.NSSplitView;
@@ -27,7 +29,7 @@ public class NSApplicationTest {
 
 			final var window = new NSWindow();
 			window.setTitle("test");
-			window.setTitleVisibility(NSWindowTitleVisibility.hidden);
+			window.setTitleVisibility(NSWindowTitleVisibility.Hidden);
 			window.setToolbar(createToolbar());
 
 			createSplitPane(window);
@@ -45,16 +47,22 @@ public class NSApplicationTest {
 
 	private static void createSplitPane(NSWindow window) {
 		var bounds = window.contentViewFrame();
-		
-//		var splitView = new NSSplitView(bounds);
-		var splitView = new NSSplitView(new NSRect(0, 0, 100, 100));
 
-		var button1 = new NSButton("test");
+//		var splitView = new NSSplitView(bounds);
+		var splitView = new NSSplitView(new NSRect(0, 0, 600, 800));
+		splitView.setDividerStyle(NSSplitViewDividerStyle.Thin);
+		splitView.setOrientation(Orientation.Vertical);
+
+		splitView.getDividerStyle();
+		
+		var button1 = new NSButton("test1");
 		var button2 = new NSButton("test2");
 
 		splitView.addSubview(button1);
 		splitView.addSubview(button2);
 
+		splitView.adjustSubviews();
+		
 		window.addSubview(splitView);
 	}
 

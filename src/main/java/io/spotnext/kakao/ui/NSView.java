@@ -6,6 +6,7 @@ import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
+import io.spotnext.kakao.structs.NSFocusRingType;
 
 public class NSView extends NSObject {
 
@@ -61,4 +62,7 @@ public class NSView extends NSObject {
 		nativeObject.send("addSubview:", view.nativeObject);
 	}
 
+	public void setFocusRingType(NSFocusRingType value) {
+		nativeObject.send("setFocusRingType:", value.id);
+	}
 }

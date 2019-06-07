@@ -9,6 +9,7 @@ import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSSize;
 import io.spotnext.kakao.structs.NSBezelStyle;
+import io.spotnext.kakao.structs.NSFocusRingType;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSString;
 
@@ -93,6 +94,7 @@ public class NSToolbarItem extends NSObject {
 
 	public void setView(NSView view) {
 		if (view instanceof NSButton) {
+			view.setFocusRingType(NSFocusRingType.None);
 			view.setFrameSize(NSSize.of(60, 80));
 			((NSButton) view).setBezelSstyle(NSBezelStyle.TexturedRounded);
 		}

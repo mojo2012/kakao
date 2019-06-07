@@ -6,7 +6,7 @@ public enum NSToolbarDisplayMode {
 	LabelOnly(2),
 	IconAndLabel(3);
 
-	public long id;
+	public final long id;
 	
 	private NSToolbarDisplayMode(long id) {
 		this.id = id;

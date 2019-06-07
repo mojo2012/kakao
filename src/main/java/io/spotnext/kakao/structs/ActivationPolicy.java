@@ -5,7 +5,7 @@ public enum ActivationPolicy {
 	accessory(1),
 	prohibited(2);
 	
-	public long id;
+	public final long id;
 
 	private ActivationPolicy(long id) {
 		this.id = id;
