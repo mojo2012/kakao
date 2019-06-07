@@ -49,8 +49,8 @@ public class NSView extends NSObject {
 	}
 
 	public NSRect contentViewFrame() {
-		var proxy = nativeObject.getProxy("contentView").getProxy("frame").getPeer();
-		return new NSRect(proxy);
+		var desc = nativeObject.getProxy("contentView").getProxy("bounds").toString();
+		return NSRect.parse(desc);
 	}
 	
 	public NSRect frame() {

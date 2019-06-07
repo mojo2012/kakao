@@ -49,7 +49,7 @@ public class NSApplicationTest {
 		var bounds = window.contentViewFrame();
 
 //		var splitView = new NSSplitView(bounds);
-		var splitView = new NSSplitView(new NSRect(0, 0, 600, 800));
+		var splitView = new NSSplitView(bounds);
 		splitView.setDividerStyle(NSSplitViewDividerStyle.Thin);
 		splitView.setOrientation(Orientation.Vertical);
 

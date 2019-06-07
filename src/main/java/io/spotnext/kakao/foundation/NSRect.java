@@ -24,6 +24,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
@@ -33,7 +34,10 @@ import ca.weblite.objc.Proxy;
 /**
  * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
  */
-public class NSRect extends Structure implements Structure.ByValue, Cloneable {
+public class NSRect extends Structure implements Structure.ByValue {
+	private static final String REGEX_PATTERN = "NSRect:[\\s]{0,1}\\{\\{([0-9].*?),[\\s]{0,1}([0-9].*?)\\},[\\s]{0,1}\\{([0-9].*?)\\,\\s([0-9].*?)\\}\\}";
+	private static final Pattern PATTER = Pattern.compile(REGEX_PATTERN);
+
 	public NSPoint origin;
 	public NSSize size;
 
@@ -41,7 +45,7 @@ public class NSRect extends Structure implements Structure.ByValue, Cloneable {
 		super(pointer);
 		read();
 	}
-	
+
 	public NSRect(Proxy proxy) {
 		this.origin = new NSPoint(proxy.getProxy("origin"));
 		this.size = new NSSize(proxy.getProxy("size"));
@@ -89,4 +93,19 @@ public class NSRect extends Structure implements Structure.ByValue, Cloneable {
 		return new NSRect(origin.x.doubleValue(), origin.y.doubleValue(),
 				size.width.doubleValue(), size.height.doubleValue());
 	}
+
+	// NSRect: {{0, 0}, {600, 422}}
+	public static NSRect parse(String objcDescription) {
+			var matcher = PATTER.matcher(objcDescription);
+			if (matcher.matches() && matcher.groupCount() == 4) {
+				var x = Double.parseDouble(matcher.group(1));
+				var y = Double.parseDouble(matcher.group(2));
+				var width = Double.parseDouble(matcher.group(3));
+				var height = Double.parseDouble(matcher.group(4));
+				
+				return new NSRect(x, y, width, height); 
+			}
+			
+	        throw new IllegalStateException("Could not parse objective-c description");
+	    }
 }
