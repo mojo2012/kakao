@@ -1,5 +1,7 @@
 package io.spotnext.kakao.ui;
 
+import org.rococoa.cocoa.CGFloat;
+
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.Orientation;
@@ -35,14 +37,18 @@ public class NSSplitView extends NSView {
 
 		return isVertical ? Orientation.Vertical : Orientation.Horizontal;
 	}
-	
+
 	public void setDividerStyle(NSSplitViewDividerStyle value) {
 		nativeObject.send("setDividerStyle:", value.id);
 	}
-	
+
 	public NSSplitViewDividerStyle getDividerStyle() {
 		var id = nativeObject.sendRaw("dividerStyle");
-		
+
 		return NSSplitViewDividerStyle.fromId((long) id).get();
+	}
+
+	public void setPosition(double value, int dividerIndex) {
+		nativeObject.send("setPosition:ofDividerAtIndex:", new CGFloat(value), dividerIndex);
 	}
 }

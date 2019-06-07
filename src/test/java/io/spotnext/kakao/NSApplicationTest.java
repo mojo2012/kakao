@@ -3,7 +3,6 @@ package io.spotnext.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
@@ -48,7 +47,6 @@ public class NSApplicationTest {
 	private static void createSplitPane(NSWindow window) {
 		var bounds = window.contentViewFrame();
 
-//		var splitView = new NSSplitView(bounds);
 		var splitView = new NSSplitView(bounds);
 		splitView.setDividerStyle(NSSplitViewDividerStyle.Thin);
 		splitView.setOrientation(Orientation.Vertical);
@@ -61,6 +59,8 @@ public class NSApplicationTest {
 		splitView.addSubview(button1);
 		splitView.addSubview(button2);
 
+		// why can't I pass 200?
+		splitView.setPosition(20d, 0);
 		splitView.adjustSubviews();
 		
 		window.addSubview(splitView);
