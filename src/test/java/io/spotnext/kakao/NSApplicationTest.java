@@ -3,14 +3,23 @@ package io.spotnext.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.spotnext.kakao.foundation.NSPoint;
+import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.foundation.NSSize;
+import io.spotnext.kakao.structs.NSFocusRingType;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
 import io.spotnext.kakao.structs.Orientation;
+import io.spotnext.kakao.structs.SelectionHighlightStyle;
 import io.spotnext.kakao.ui.NSButton;
+import io.spotnext.kakao.ui.NSClipView;
+import io.spotnext.kakao.ui.NSOutlineView;
+import io.spotnext.kakao.ui.NSScrollView;
 import io.spotnext.kakao.ui.NSSearchField;
 import io.spotnext.kakao.ui.NSSplitView;
+import io.spotnext.kakao.ui.NSTextField;
 import io.spotnext.kakao.ui.NSToolbar;
 import io.spotnext.kakao.ui.NSToolbarItem;
 import io.spotnext.kakao.ui.NSWindow;
@@ -52,17 +61,40 @@ public class NSApplicationTest {
 		splitView.setOrientation(Orientation.Vertical);
 
 		splitView.getDividerStyle();
-		
-		var button1 = new NSButton("test1");
-		var button2 = new NSButton("test2");
 
-		splitView.addSubview(button1);
-		splitView.addSubview(button2);
+		var sidebarX = 0;
+		var sidebarY = 0;
+		var sidebarWidth = 250d;
+		var sidebarHeight = bounds.size.height.doubleValue();
+
+		var sidebar = new NSOutlineView();
+		sidebar.setSelectionHighlightStyle(SelectionHighlightStyle.SourceList);
+		
+		var sidebarRect = new NSRect(sidebarX, sidebarY, sidebarWidth, sidebarHeight);
+		var clipView = new NSClipView();
+		clipView.setAutoresizesSubviews(true);
+		clipView.setDocumentView(sidebar);
+		
+		var sidebarScrollView = new NSScrollView(sidebarRect);
+		sidebarScrollView.setContentView(clipView);
+
+
+		var textFieldX = sidebarX + sidebarWidth;
+		var textFieldY = sidebarY;
+		var textFieldWidth = bounds.size.width.doubleValue() - sidebarWidth;
+		var textFieldHeight = sidebarHeight;
+
+		var textField = new NSTextField(new NSRect(textFieldX, textFieldY, textFieldWidth, textFieldHeight));
+		textField.setFocusRingType(NSFocusRingType.None);
+		textField.setBordered(false);
+
+		splitView.addSubview(sidebarScrollView);
+		splitView.addSubview(textField);
 
 		// why can't I pass 200?
-		splitView.setPosition(20d, 0);
+//		splitView.setPosition(20d, 0);
 		splitView.adjustSubviews();
-		
+
 		window.addSubview(splitView);
 	}
 

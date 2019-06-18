@@ -1,7 +1,5 @@
 package io.spotnext.kakao.ui;
 
-import com.sun.jna.Pointer;
-
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
@@ -64,5 +62,13 @@ public class NSView extends NSObject {
 
 	public void setFocusRingType(NSFocusRingType value) {
 		nativeObject.send("setFocusRingType:", value.id);
+	}
+	
+	public void wantsLayer(boolean visible) {
+		nativeObject.set("wantsLayer", visible);
+	}
+	
+	public boolean wantsLayer() {
+		return nativeObject.getBoolean("wantsLayer");
 	}
 }
