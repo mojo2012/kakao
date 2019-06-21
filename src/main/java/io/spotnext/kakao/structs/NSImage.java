@@ -14,13 +14,13 @@ public class NSImage extends NSObject {
 	public NSImage(NSImageName name) {
 		super("NSImage", false);
 
-		initWithProxy(alloc("NSImage", "imageNamed:", new NSString(name.id).getNativeObject()));
+		initWithProxy(alloc("NSImage", "imageNamed:", new NSString(name.id).getNativeHandle()));
 	}
 
 	public NSImage(NSData data) {
 		super("NSImage", false);
 
-		initWithProxy(init(alloc("NSImage", SELECTOR_ALLOC), "initWithData:", data.getNativeObject()));
+		initWithProxy(init(alloc("NSImage", SELECTOR_ALLOC), "initWithData:", data.getNativeHandle()));
 	}
 
 	public NSImage(Proxy proxy) {

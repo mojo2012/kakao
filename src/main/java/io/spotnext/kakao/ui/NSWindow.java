@@ -23,19 +23,19 @@ public class NSWindow extends NSView {
 			}
 		}
 
-		initWithProxy(initWithRect(alloc(nsClassName, SELECTOR_ALLOC), frame, style, backing, defer));
+		initWithProxy(initWithRect(alloc(nativeClassName, SELECTOR_ALLOC), frame, style, backing, defer));
 	}
 
 	public NSWindow() {
 		super("NSWindow", false);
 
-		initWithProxy(initWithDefaults(alloc(nsClassName, SELECTOR_ALLOC)));
+		initWithProxy(initWithDefaults(alloc(nativeClassName, SELECTOR_ALLOC)));
 	}
 	
 	public NSWindow(NSObject contentViewController) {
 		super("NSWindow", false);
 
-		initWithProxy(alloc(nsClassName, "windowWithContentViewController:", contentViewController));
+		initWithProxy(alloc(nativeClassName, "windowWithContentViewController:", contentViewController));
 	}
 
 	protected Proxy initWithDefaults(Proxy proxy) {
@@ -48,31 +48,31 @@ public class NSWindow extends NSView {
 	}
 
 	public void setTitleVisibility(NSWindowTitleVisibility value) {
-		nativeObject.send("setTitleVisibility:", value.getCode());
+		nativeHandle.send("setTitleVisibility:", value.getCode());
 	}
 
 	public void setTitlebarAppearsTransparent(boolean value) {
-		nativeObject.send("setTitleVisibility:", value);
+		nativeHandle.send("setTitleVisibility:", value);
 	}
 
 	public void setTitle(String title) {
-		nativeObject.send("setTitle:", title);
+		nativeHandle.send("setTitle:", title);
 	}
 
 	public void makeKeyAndOrderFront(NSObject sender) {
-		nativeObject.send("makeKeyAndOrderFront:", sender);
+		nativeHandle.send("makeKeyAndOrderFront:", sender);
 	}
 
 	public void orderFrontRegardless() {
-		nativeObject.send("orderFrontRegardless");
+		nativeHandle.send("orderFrontRegardless");
 	}
 
 	public void center() {
-		nativeObject.send("center");
+		nativeHandle.send("center");
 	}
 
 	public void setToolbar(NSToolbar toolbar) {
-		nativeObject.send("setToolbar:", toolbar.getNativeObject());
+		nativeHandle.send("setToolbar:", toolbar.getNativeHandle());
 	}
 
 	public NSView contentView() {
@@ -82,17 +82,17 @@ public class NSWindow extends NSView {
 	}
 
 	protected Proxy contentViewInternal() {
-		return nativeObject.sendProxy("contentView");
+		return nativeHandle.sendProxy("contentView");
 	}
 	
 	public NSRect frame() {
-		var pointer = nativeObject.sendProxy("frame").getPeer();
+		var pointer = nativeHandle.sendProxy("frame").getPeer();
 		return new NSRect(pointer).copy();
 	}
 
 	@Override
 	public void addSubview(NSView view) {
-		contentViewInternal().send("addSubview:", view.getNativeObject());
+		contentViewInternal().send("addSubview:", view.getNativeHandle());
 	}
 
 }

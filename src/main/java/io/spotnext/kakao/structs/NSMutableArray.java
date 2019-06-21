@@ -13,16 +13,16 @@ public class NSMutableArray<T> extends NSArray<T> {
 
 	public void addObject(T object) {
 		if (object != null) {
-			nativeObject.send("addObject:", object);
+			nativeHandle.send("addObject:", object);
 		}
 	}
 
 	public void removeObject(T object) {
-		nativeObject.send("removeObject:", object);
+		nativeHandle.send("removeObject:", object);
 	}
 
 	public NSArray<T> copy() {
-		var proxy = nativeObject.sendProxy("copy");
+		var proxy = nativeHandle.sendProxy("copy");
 
 		return new NSArray<T>(proxy, elementType);
 	}

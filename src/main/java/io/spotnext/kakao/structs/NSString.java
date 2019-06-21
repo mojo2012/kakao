@@ -30,10 +30,10 @@ public class NSString extends NSObject {
 
 	@Override
 	public String toString() {
-		return nativeObject.toString();
+		return nativeHandle.toString();
 	}
 
 	public String toUTF8String() {
-		return nativeObject.sendString("UTF8String");
+		return nativeHandle.sendString("UTF8String");
 	}
 }

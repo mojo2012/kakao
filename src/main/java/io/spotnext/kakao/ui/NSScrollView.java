@@ -14,31 +14,31 @@ public class NSScrollView extends NSView {
 	}
 
 	public void setIdentifier(String identifier) {
-		nativeObject.send("setIdentifier:", identifier);
+		nativeHandle.send("setIdentifier:", identifier);
 	}
 	
 	public String getIdentifier() {
-		return nativeObject.sendString("getIdentifier");
+		return nativeHandle.sendString("getIdentifier");
 	}
 	
 	public void setVerticalScroller(boolean visible) {
-		nativeObject.set("hasVerticalScroller", visible);
+		nativeHandle.set("hasVerticalScroller", visible);
 	}
 	
 	public boolean hasVerticalScroller() {
-		return nativeObject.getBoolean("hasVerticalScroller");
+		return nativeHandle.getBoolean("hasVerticalScroller");
 	}
 	
 	public void setHorizontalScroller(boolean visible) {
-		nativeObject.set("hasHorizontalScroller", visible);
+		nativeHandle.set("hasHorizontalScroller", visible);
 	}
 	
 	public boolean hasHorizontalScroller() {
-		return nativeObject.getBoolean("hasHorizontalScroller");
+		return nativeHandle.getBoolean("hasHorizontalScroller");
 	}
 
 	public void setContentView(NSClipView clipView) {
-		nativeObject.set("contentView", clipView.getNativeObject());
+		nativeHandle.set("contentView", clipView.getNativeHandle());
 	}
 	
 }

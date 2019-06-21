@@ -3,9 +3,8 @@ package io.spotnext.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.spotnext.kakao.foundation.NSPoint;
 import io.spotnext.kakao.foundation.NSRect;
-import io.spotnext.kakao.foundation.NSSize;
+import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
@@ -19,6 +18,7 @@ import io.spotnext.kakao.ui.NSOutlineView;
 import io.spotnext.kakao.ui.NSScrollView;
 import io.spotnext.kakao.ui.NSSearchField;
 import io.spotnext.kakao.ui.NSSplitView;
+import io.spotnext.kakao.ui.NSTableColumn;
 import io.spotnext.kakao.ui.NSTextField;
 import io.spotnext.kakao.ui.NSToolbar;
 import io.spotnext.kakao.ui.NSToolbarItem;
@@ -34,6 +34,7 @@ public class NSApplicationTest {
 			final var app = NSApplication.sharedApplication();
 			app.setApplicationIconImage("/Applications/Development/Eclipse.app/Contents/Resources/Eclipse.icns");
 			app.setApplicationName("Test Application");
+			app.setApplicationShouldTerminateAfterLastWindowClosed(true);
 
 			final var window = new NSWindow();
 			window.setTitle("test");
@@ -69,15 +70,22 @@ public class NSApplicationTest {
 
 		var sidebar = new NSOutlineView();
 		sidebar.setSelectionHighlightStyle(SelectionHighlightStyle.SourceList);
-		
+
+		var col1 = new NSTableColumn("Content");
+		col1.setEditable(false);
+		col1.getHeaderCell().setStringValue("Content");
+		sidebar.addTableColumn(col1);
+		sidebar.setOutlineTableColumn(col1);
+		sidebar.setTableHeaderView(null);
+
 		var sidebarRect = new NSRect(sidebarX, sidebarY, sidebarWidth, sidebarHeight);
 		var clipView = new NSClipView();
 		clipView.setAutoresizesSubviews(true);
 		clipView.setDocumentView(sidebar);
-		
+
 		var sidebarScrollView = new NSScrollView(sidebarRect);
 		sidebarScrollView.setContentView(clipView);
-
+		sidebarScrollView.setAutoresizingMask(NSAutoresizingMaskOptions.MaxXMargin);
 
 		var textFieldX = sidebarX + sidebarWidth;
 		var textFieldY = sidebarY;
@@ -94,6 +102,8 @@ public class NSApplicationTest {
 		// why can't I pass 200?
 //		splitView.setPosition(20d, 0);
 		splitView.adjustSubviews();
+		splitView.setAutoresizingMask(NSAutoresizingMaskOptions.HeightSizable, NSAutoresizingMaskOptions.WidthSizable);
+//		splitView.setHoldingPriorityForSubview(490, 0);
 
 		window.addSubview(splitView);
 	}

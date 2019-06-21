@@ -4,6 +4,7 @@ import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
+import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
 
 public class NSView extends NSObject {
@@ -43,32 +44,45 @@ public class NSView extends NSObject {
 	}
 
 	public void setFrameSize(NSSize size) {
-		nativeObject.send("setFrameSize:", size);
+		nativeHandle.send("setFrameSize:", size);
 	}
 
 	public NSRect contentViewFrame() {
-		var desc = nativeObject.getProxy("contentView").getProxy("bounds").toString();
+		var desc = nativeHandle.getProxy("contentView").getProxy("bounds").toString();
 		return NSRect.parse(desc);
 	}
-	
+
 	public NSRect frame() {
-		var pointer = nativeObject.getProxy("frame").getPeer();
+		var pointer = nativeHandle.getProxy("frame").getPeer();
 		return new NSRect(pointer).copy();
 	}
 
 	public void addSubview(NSView view) {
-		nativeObject.send("addSubview:", view.nativeObject);
+		nativeHandle.send("addSubview:", view.nativeHandle);
 	}
 
 	public void setFocusRingType(NSFocusRingType value) {
-		nativeObject.send("setFocusRingType:", value.id);
+		nativeHandle.send("setFocusRingType:", value.id);
 	}
-	
+
 	public void wantsLayer(boolean visible) {
-		nativeObject.set("wantsLayer", visible);
+		nativeHandle.set("wantsLayer", visible);
+	}
+
+	public boolean wantsLayer() {
+		return nativeHandle.getBoolean("wantsLayer");
+	}
+
+	public void setAutoresizingMask(NSAutoresizingMaskOptions... values) {
+		var mask = 0;
+
+		if (values != null) {
+			for (var v : values) {
+				mask |= v.id;
+			}
+		}
+
+		nativeHandle.send("setAutoresizingMask:", mask);
 	}
 	
-	public boolean wantsLayer() {
-		return nativeObject.getBoolean("wantsLayer");
-	}
 }

@@ -34,10 +34,10 @@ public class NSButton extends NSView {
 
 		if (title != null && image != null) {
 			selector = "buttonWithTitle:image:target:action:";
-			arguments.addAll(Arrays.asList(title, new NSImage(image).getNativeObject()));
+			arguments.addAll(Arrays.asList(title, new NSImage(image).getNativeHandle()));
 		} else if (image != null) {
 			selector = "buttonWithImage:target:action:";
-			arguments.add(new NSImage(image).getNativeObject());
+			arguments.add(new NSImage(image).getNativeHandle());
 		} else {
 			selector = "buttonWithTitle:target:action:";
 			arguments.add(title);
@@ -54,29 +54,29 @@ public class NSButton extends NSView {
 	}
 
 	public void setTitle(String value) {
-		nativeObject.send("setTitle:", new NSString(value).getNativeObject());
+		nativeHandle.send("setTitle:", new NSString(value).getNativeHandle());
 	}
 
 	public String getTitle() {
-		return nativeObject.send("title:").toString();
+		return nativeHandle.send("title:").toString();
 	}
 
 	public void setImageName(NSImageName value) {
-		nativeObject.send("setImage:", new NSImage(value).getNativeObject());
+		nativeHandle.send("setImage:", new NSImage(value).getNativeHandle());
 	}
 
 	public NSImage getImageName() {
-		var proxy = nativeObject.sendProxy("image");
+		var proxy = nativeHandle.sendProxy("image");
 
 		return new NSImage(proxy);
 	}
 
 	public void setBezelSstyle(NSBezelStyle value) {
-		nativeObject.send("setBezelStyle:", value.id);
+		nativeHandle.send("setBezelStyle:", value.id);
 	}
 
 	public void setButtonType(NSButtonType value) {
-		nativeObject.send("setButtonType:", value.id);
+		nativeHandle.send("setButtonType:", value.id);
 	}
 
 	@Msg(selector = "onAction:", signature = "v@:@")
@@ -87,13 +87,13 @@ public class NSButton extends NSView {
 	}
 
 	public void setTarget(NSObject eventReceiver) {
-		nativeObject.send("setTarget:", eventReceiver);
+		nativeHandle.send("setTarget:", eventReceiver);
 	}
 
 	public void setAction(Consumer<NSButton> listener) {
 		this.actionListener = listener;
 
 		setTarget(this);
-		nativeObject.send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
+		nativeHandle.send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
 	}
 }

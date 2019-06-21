@@ -14,6 +14,6 @@ public class NSMenu extends NSObject {
 	}
 
 	public void setAutoenablesItems(boolean value) {
-		nativeObject.send("setAutoenablesItems:", value);
+		nativeHandle.send("setAutoenablesItems:", value);
 	}
 }

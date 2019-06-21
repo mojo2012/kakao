@@ -13,6 +13,8 @@ public class NSApplication extends NSObject {
 
 	protected NSObject delegate;
 	protected Proxy window;
+	
+	protected boolean applicationShouldTerminateAfterLastWindowClosed;
 
 	protected Consumer<Proxy> applicationDidFinishLaunchingListener;
 
@@ -29,11 +31,11 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setActivationPolicy(ActivationPolicy value) {
-		nativeObject.send("setActivationPolicy:", value.id);
+		nativeHandle.send("setActivationPolicy:", value.id);
 	}
 
 	public void setMainMenu(NSMenu mainMenu) {
-		nativeObject.send("setMainMenu:", mainMenu.getNativeObject());
+		nativeHandle.send("setMainMenu:", mainMenu.getNativeHandle());
 	}
 
 	public static NSApplication sharedApplication() {
@@ -75,8 +77,21 @@ public class NSApplication extends NSObject {
 	}
 
 	public void run() {
-		nativeObject.send("setDelegate:", delegate != null ? delegate : this);
-		nativeObject.send("run");
+		nativeHandle.send("setDelegate:", delegate != null ? delegate : this);
+		nativeHandle.send("run");
+	}
+
+	public boolean isApplicationShouldTerminateAfterLastWindowClosed() {
+		return applicationShouldTerminateAfterLastWindowClosed;
+	}
+	
+	public void setApplicationShouldTerminateAfterLastWindowClosed(boolean applicationShouldTerminateAfterLastWindowClosed) {
+		this.applicationShouldTerminateAfterLastWindowClosed = applicationShouldTerminateAfterLastWindowClosed;
+	}
+	
+	@Msg(selector = "applicationShouldTerminateAfterLastWindowClosed:", signature = "B@:@")
+	public int applicationShouldTerminateAfterLastWindowClosed(Proxy nsApplication) {
+		return applicationShouldTerminateAfterLastWindowClosed ? 1 : 0;
 	}
 
 	public void setApplicationName(String name) {
@@ -86,10 +101,19 @@ public class NSApplication extends NSObject {
 	public void setApplicationIconImage(String iconPath) {
 		var image = new NSImage(iconPath);
 
-		nativeObject.send("setApplicationIconImage:", image.getNativeObject());
+		nativeHandle.send("setApplicationIconImage:", image.getNativeHandle());
 	}
 
 	public void activateIgnoringOtherApps(boolean value) {
-		nativeObject.send("activateIgnoringOtherApps:", value);
+		nativeHandle.send("activateIgnoringOtherApps:", value);
 	}
+
+	public Consumer<Proxy> getApplicationDidFinishLaunchingListener() {
+		return applicationDidFinishLaunchingListener;
+	}
+
+	public void setApplicationDidFinishLaunchingListener(Consumer<Proxy> applicationDidFinishLaunchingListener) {
+		this.applicationDidFinishLaunchingListener = applicationDidFinishLaunchingListener;
+	}
+	
 }

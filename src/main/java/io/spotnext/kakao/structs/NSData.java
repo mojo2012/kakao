@@ -10,7 +10,7 @@ public class NSData extends NSObject {
 	protected NSData(byte[] data) {
 		super("NSData", false);
 
-		nativeObject = getClient().sendProxy("NSData", "dataWithBytes:length:", data, data.length);
+		nativeHandle = getClient().sendProxy("NSData", "dataWithBytes:length:", data, data.length);
 	}
 
 	public static NSData dataWithBytes(byte[] data) {

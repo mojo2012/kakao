@@ -14,10 +14,10 @@ public class NSTextField extends NSView {
 	}
 
 	public void setBordered(boolean value) {
-		nativeObject.send("setBordered:", value);
+		nativeHandle.send("setBordered:", value);
 	}
 	
 	public boolean isBordered() {
-		return nativeObject.getBoolean("isBordered");
+		return nativeHandle.getBoolean("isBordered");
 	}
 }

@@ -41,13 +41,13 @@ public class NSArray<T> extends NSObject {
 	}
 
 	public T objectAtIndex(int index) {
-		var proxy = nativeObject.sendProxy("objectAtIndex:", index);
+		var proxy = nativeHandle.sendProxy("objectAtIndex:", index);
 
 		return constructElementWrapper(proxy, elementType);
 	}
 
 	public int count() {
-		return nativeObject.sendInt("count");
+		return nativeHandle.sendInt("count");
 	}
 
 }

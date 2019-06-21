@@ -1,6 +1,5 @@
 package io.spotnext.kakao;
 
-import java.awt.Point;
 import java.lang.reflect.InvocationTargetException;
 
 import com.sun.jna.Pointer;
@@ -14,8 +13,8 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	public static final String SELECTOR_ALLOC = "alloc";
 	public static final String SELECTOR_INIT = "init";
 
-	protected String nsClassName;
-	protected Proxy nativeObject;
+	protected String nativeClassName;
+	protected Proxy nativeHandle;
 
 	protected NSObject() {
 		this("NSObject", true);
@@ -23,7 +22,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 
 	protected NSObject(String className, boolean defaultAllocInit) {
 		super("NSObject");
-		this.nsClassName = className;
+		this.nativeClassName = className;
 
 		if (defaultAllocInit) {
 			initWithProxy(init(alloc(className, SELECTOR_ALLOC), SELECTOR_INIT));
@@ -56,43 +55,47 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		var proxyClassLong = (long) proxy.send("class");
 		var proxyClassPointer = new Pointer(proxyClassLong);
 		var proxyClassProxy = new Proxy(proxyClassPointer);
-		
+
 		// TODO: call real objc selector?
-		this.nsClassName = proxyClassProxy.toString();
-		this.nativeObject = proxy;
+		this.nativeClassName = proxyClassProxy.toString();
+		this.nativeHandle = proxy;
 	}
 
-	public Proxy getNativeObject() {
-		return nativeObject;
+	public Proxy getNativeHandle() {
+		return nativeHandle;
+	}
+
+	public String getNativeClassName() {
+		return nativeClassName;
 	}
 
 	public void release() {
-		nativeObject.send("release");
+		nativeHandle.send("release");
 	}
 
 	public int retainCount() {
-		return nativeObject.sendInt("retainCount");
+		return nativeHandle.sendInt("retainCount");
 	}
 
 	public boolean isKindOfClass(String className) {
 		var objCClassPointer = RuntimeUtils.cls(className);
-		return nativeObject.sendBoolean("isKindOfClass", objCClassPointer);
+		return nativeHandle.sendBoolean("isKindOfClass", objCClassPointer);
 	}
 
 	public boolean isKindOfClass(NSObject object) {
-		var objPointer = object.nativeObject.getPeer();
-		return nativeObject.sendBoolean("isKindOfClass", objPointer);
+		var objPointer = object.nativeHandle.getPeer();
+		return nativeHandle.sendBoolean("isKindOfClass", objPointer);
 	}
 
 	public String description() {
-		return nativeObject.sendString("description");
+		return nativeHandle.sendString("description");
 	}
-	
+
 	public <T extends NSObject> T copy() {
-		var copiedProxy = nativeObject.sendProxy("copyWithZone", new Object[0]);
+		var copiedProxy = nativeHandle.sendProxy("copyWithZone", new Object[0]);
 		return (T) constructElementWrapper(copiedProxy, this.getClass());
 	}
-	
+
 	protected <T> T constructElementWrapper(Proxy proxy, Class<T> elementType) {
 		try {
 			return elementType.getConstructor(Proxy.class).newInstance(proxy);

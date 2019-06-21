@@ -27,7 +27,7 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	public NSToolbar() {
 		super("NSToolbar", false);
 
-		initWithProxy(init(alloc("NSToolbar", SELECTOR_ALLOC), "initWithIdentifier:", new NSString("mainToolbar").getNativeObject()));
+		initWithProxy(init(alloc("NSToolbar", SELECTOR_ALLOC), "initWithIdentifier:", new NSString("mainToolbar").getNativeHandle()));
 
 		setAllowsUserCustomization(true);
 		setAutosavesConfiguration(true);
@@ -36,15 +36,15 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	public void setAllowsUserCustomization(boolean value) {
-		nativeObject.send("setAllowsUserCustomization:", value);
+		nativeHandle.send("setAllowsUserCustomization:", value);
 	}
 
 	public void setAutosavesConfiguration(boolean value) {
-		nativeObject.send("setAutosavesConfiguration:", value);
+		nativeHandle.send("setAutosavesConfiguration:", value);
 	}
 
 	public void setDisplayMode(NSToolbarDisplayMode mode) {
-		nativeObject.send("setDisplayMode:", mode.id);
+		nativeHandle.send("setDisplayMode:", mode.id);
 	}
 
 	public void insertItem(NSToolbarItem item, int index) {
@@ -69,17 +69,17 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	 * @param index
 	 */
 	public void insertItemWithItemIdentifier(String identifier, int index) {
-		nativeObject.send("insertItemWithItemIdentifier:atIndex:", identifier, index);
+		nativeHandle.send("insertItemWithItemIdentifier:atIndex:", identifier, index);
 	}
 
 	public NSArray<NSToolbarItem> getItems() {
-		var nsArray = new NSArray<>(nativeObject.sendProxy("items"), NSToolbarItem.class);
+		var nsArray = new NSArray<>(nativeHandle.sendProxy("items"), NSToolbarItem.class);
 
 		return nsArray;
 	}
 
 	public void setDelegate(NSObject delegate) {
-		nativeObject.send("setDelegate:", this);
+		nativeHandle.send("setDelegate:", this);
 	}
 
 	@Override
@@ -100,18 +100,18 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 			items.put(itemId, item);
 		}
 
-		return item.getNativeObject();
+		return item.getNativeHandle();
 	}
 
 	public void removeItemAtIndex(int index) {
-		nativeObject.send("removeItemAtIndex:", index);
+		nativeHandle.send("removeItemAtIndex:", index);
 
 		var id = (new LinkedList<String>(items.keySet())).get(index);
 		items.remove(id);
 	}
 
 	public NSToolbarItem selectedItemIdentifier() {
-		var id = nativeObject.sendProxy("selectedItemIdentifier");
+		var id = nativeHandle.sendProxy("selectedItemIdentifier");
 
 		if (id != null) {
 			return items.get(id.toString());
@@ -129,7 +129,7 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 			identifiers.addObject(id);
 		}
 
-		return identifiers.getNativeObject();
+		return identifiers.getNativeHandle();
 	}
 
 	@Override
@@ -151,7 +151,7 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 		identifiers.addObject(NSToolbarItem.SUBCLASS_SHOW_PRINT);
 		identifiers.addObject(NSToolbarItem.SUBCLASS_TOGGLE_SIDEBAR);
 
-		return identifiers.getNativeObject();
+		return identifiers.getNativeHandle();
 	}
 
 	@Override

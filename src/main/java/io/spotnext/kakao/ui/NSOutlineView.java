@@ -19,19 +19,36 @@ public class NSOutlineView extends NSView {
 	}
 
 	public void setDelegate() {
-		nativeObject.send("setDelegate:", this);
+		nativeHandle.send("setDelegate:", this);
 	}
 
 	public void setDataSource() {
-		nativeObject.send("setDataSource:", this);
+		nativeHandle.send("setDataSource:", this);
 	}
 
 	public void setSelectionHighlightStyle(SelectionHighlightStyle value) {
-		nativeObject.send("setSelectionHighlightStyle:", value.id);
+		nativeHandle.send("setSelectionHighlightStyle:", value.id);
 	}
 
 	public SelectionHighlightStyle getSelectionHighlightStyle() {
-		var styleId = nativeObject.getInt("selectionHighlightStyle");
+		var styleId = nativeHandle.getInt("selectionHighlightStyle");
 		return SelectionHighlightStyle.fromId(styleId).get();
+	}
+
+	public void addTableColumn(NSTableColumn column) {
+		nativeHandle.send("addTableColumn:", column.getNativeHandle());
+	}
+
+	public void setOutlineTableColumn(NSTableColumn column) {
+		nativeHandle.send("setOutlineTableColumn:", column != null ? column.getNativeHandle() : null);
+	}
+
+	/**
+	 * To hide the header view, just set it to null.
+	 * 
+	 * @param header
+	 */
+	public void setTableHeaderView(NSTableHeaderView header) {
+		nativeHandle.send("setHeaderView:", header != null ? header.getNativeHandle() : null);
 	}
 }
