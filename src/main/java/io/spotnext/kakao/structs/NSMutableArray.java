@@ -1,5 +1,8 @@
 package io.spotnext.kakao.structs;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import ca.weblite.objc.Proxy;
 
 public class NSMutableArray<T> extends NSArray<T> {
@@ -7,7 +10,7 @@ public class NSMutableArray<T> extends NSArray<T> {
 		super("NSMutableArray", elementType);
 	}
 
-	protected NSMutableArray(Proxy proxy, Class<T> elementType) {
+	public NSMutableArray(Proxy proxy, Class<T> elementType) {
 		super(proxy, elementType);
 	}
 
@@ -17,11 +20,17 @@ public class NSMutableArray<T> extends NSArray<T> {
 		}
 	}
 
-	public void addObjects(T... objects) {
+	public void addObjects(Collection<T> objects) {
 		if (objects != null) {
 			for (var o : objects) {
 				nativeHandle.send("addObject:", o);
 			}
+		}
+	}
+	
+	public void addObjects(T... objects) {
+		if (objects != null) {
+			addObjects(Arrays.asList(objects));
 		}
 	}
 

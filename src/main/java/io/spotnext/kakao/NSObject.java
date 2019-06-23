@@ -4,14 +4,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+
 import com.sun.jna.Pointer;
+import com.sun.jna.internal.ReflectionUtils;
 
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.RuntimeUtils;
 import ca.weblite.objc.annotations.Msg;
+import io.spotnext.kakao.exceptions.PropertyAccessException;
 import io.spotnext.kakao.structs.NSBindingName;
 import io.spotnext.kakao.structs.NSBindingOption;
+import io.spotnext.support.util.ClassUtil;
 
 public abstract class NSObject extends ca.weblite.objc.NSObject {
 
@@ -37,7 +42,8 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	/**
 	 * Pass an already initialized {@link NativeObject}
 	 * 
-	 * @param proxy the already initialized (eg. alloc/init already done) proxy object
+	 * @param proxy the already initialized (eg. alloc/init already done) proxy
+	 *              object
 	 */
 	protected NSObject(Proxy proxy) {
 		super("NSObject");
@@ -104,32 +110,49 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	protected <T> T constructElementWrapper(Proxy proxy, Class<T> elementType) {
 		try {
 			return elementType.getConstructor(Proxy.class).newInstance(proxy);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException e) {
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
 
 			throw new IllegalStateException(e.getMessage());
 		}
 	}
 
-	public void bind(NSBindingName bindingName, NSObject observable, String keyPath, List<NSBindingOption> options) {
-		var opts = options != null ? options.stream().map(NSBindingOption::name).collect(Collectors.toList()).toArray() : null;
+	public void bind(NSBindingName bindingName, Proxy observable, String keyPath, List<NSBindingOption> options) {
+		var opts = options != null ? options.stream().map(NSBindingOption::name).collect(Collectors.toList()).toArray()
+				: null;
 
 		nativeHandle.send("bind:toObject:withKeyPath:options:", bindingName.id, observable, keyPath, opts);
 	}
 
 	@Msg(selector = "keyPathsForValuesAffectingValueForKey:", signature = "@@:@")
-	public Proxy keyPathsForValuesAffectingValueForKey(Object key) {
+	public Object keyPathsForValuesAffectingValueForKey(Proxy key) {
 		return null;
 	}
 
+	/**
+	 * Gets the value for the given property. If the value is an {@link NSObject}
+	 * then its native handle (using {@link #getNativeHandle()}) will be returned
+	 * instead of the actual object. If this behavior is not desired, the method
+	 * must be overridden.
+	 * 
+	 * @param key property
+	 * @return
+	 */
 	@Msg(selector = "valueForKey:", signature = "@@:@")
-	public Proxy valueForKey(Object key) {
-		return null;
+	public Object valueForKey(Proxy key) {
+		var property = key.toString();
+		var value = ClassUtil.getProperty(this, property);
+
+		if (value instanceof NSObject) {
+			return ((NSObject) value).getNativeHandle();
+		}
+
+		return value;
 	}
 
 	@Msg(selector = "valueForUndefinedKey:", signature = "@@:@")
-	public Proxy valueForUndefinedKey(Object key) {
-		return null;
+	public Object valueForUndefinedKey(Proxy key) throws PropertyAccessException {
+		throw new PropertyAccessException("Call to unknown property " + key.toString());
 	}
-	
+
 }

@@ -46,11 +46,11 @@ public class NSButton extends NSView {
 		arguments.add(this);
 		arguments.add(RuntimeUtils.sel("onAction:"));
 
-		var proxy = alloc("NSButton", selector, arguments.toArray());
+		var proxy = alloc(nativeClassName, selector, arguments.toArray());
 		initWithProxy(proxy);
 
-		setButtonType(NSButtonType.MomentaryPushIn);
-		setBezelSstyle(NSBezelStyle.Rounded);
+//		setButtonType(NSButtonType.MomentaryPushIn);
+//		setBezelSstyle(NSBezelStyle.Rounded);
 	}
 
 	public void setTitle(String value) {

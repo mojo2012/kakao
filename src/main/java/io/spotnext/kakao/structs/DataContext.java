@@ -1,24 +1,30 @@
 package io.spotnext.kakao.structs;
 
-import ca.weblite.objc.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 
 public class DataContext extends NSObject {
 
-	private NSMutableArray<DataNode> nodes = new NSMutableArray<>(DataNode.class);
+//	private NSMutableArray<DataNode> nodes = new NSMutableArray<>(DataNode.class);
+	private List<DataNode> nodes = new ArrayList<>();
 
-	@Msg(selector = "getNodes", signature = "@:@")
+	@Msg(selector = "nodes", signature = "@@:@")
 	public NSArray<DataNode> getNodes() {
-		return nodes;
+		var ret = new NSMutableArray<>(DataNode.class);
+		ret.addObjects(nodes);
+		return ret;
 	}
-	
-	@Msg(selector = "setNodes:", signature = "@:@")
-	public void getNodes(Proxy array) {
-		return;
+
+	public void setNodes(List<DataNode> modes) {
+		nodes.clear();
+		nodes.addAll(nodes);
 	}
-	
+
 	public void addNodes(DataNode... dataNodes) {
-		nodes.addObjects(dataNodes);
+		nodes.addAll(Arrays.asList(dataNodes));
 	}
 }

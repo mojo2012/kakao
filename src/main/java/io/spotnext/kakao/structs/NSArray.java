@@ -2,6 +2,8 @@ package io.spotnext.kakao.structs;
 
 import java.util.ArrayList;
 
+import com.sun.jna.ptr.IntByReference;
+
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 
@@ -40,11 +42,15 @@ public class NSArray<T> extends NSObject {
 	}
 
 	public T objectAtIndex(int index) {
-		var proxy = nativeHandle.sendProxy("objectAtIndex:", index);
+		var proxy = nativeHandle.sendProxy("objectAtIndex:", new IntByReference(index));
 
 		return constructElementWrapper(proxy, elementType);
 	}
-
+	
+	public Proxy containsObject(NSObject object) {
+		return nativeHandle.sendProxy("containsObject:", object.getNativeHandle());
+	}
+	
 	public int count() {
 		return nativeHandle.sendInt("count");
 	}

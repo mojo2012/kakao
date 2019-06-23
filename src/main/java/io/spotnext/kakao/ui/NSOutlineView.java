@@ -3,6 +3,7 @@ package io.spotnext.kakao.ui;
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
+import io.spotnext.kakao.support.NSOutlineViewDataSource;
 
 public class NSOutlineView extends NSView {
 
@@ -22,8 +23,8 @@ public class NSOutlineView extends NSView {
 		nativeHandle.send("setDelegate:", this);
 	}
 
-	public void setDataSource() {
-		nativeHandle.send("setDataSource:", this);
+	public void setDataSource(NSOutlineViewDataSource dataSource) {
+		nativeHandle.send("setDataSource:", dataSource);
 	}
 
 	public void setSelectionHighlightStyle(SelectionHighlightStyle value) {
