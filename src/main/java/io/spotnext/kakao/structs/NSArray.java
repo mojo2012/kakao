@@ -1,6 +1,5 @@
 package io.spotnext.kakao.structs;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import ca.weblite.objc.Proxy;

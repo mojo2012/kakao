@@ -17,6 +17,14 @@ public class NSMutableArray<T> extends NSArray<T> {
 		}
 	}
 
+	public void addObjects(T... objects) {
+		if (objects != null) {
+			for (var o : objects) {
+				nativeHandle.send("addObject:", o);
+			}
+		}
+	}
+
 	public void removeObject(T object) {
 		nativeHandle.send("removeObject:", object);
 	}

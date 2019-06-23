@@ -4,7 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.structs.DataContext;
+import io.spotnext.kakao.structs.DataGroupNode;
+import io.spotnext.kakao.structs.DataLeafNode;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
+import io.spotnext.kakao.structs.NSBindingName;
 import io.spotnext.kakao.structs.NSFocusRingType;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
@@ -12,6 +16,7 @@ import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
 import io.spotnext.kakao.structs.Orientation;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
+import io.spotnext.kakao.support.NSTreeController;
 import io.spotnext.kakao.ui.NSButton;
 import io.spotnext.kakao.ui.NSClipView;
 import io.spotnext.kakao.ui.NSOutlineView;
@@ -77,6 +82,18 @@ public class NSApplicationTest {
 		sidebar.addTableColumn(col1);
 		sidebar.setOutlineTableColumn(col1);
 		sidebar.setTableHeaderView(null);
+
+		var sidebarContent = new DataContext();
+
+		var root = new DataGroupNode("root");
+		var child1 = new DataLeafNode("leave");
+		root.addNodes(child1);
+		sidebarContent.addNodes(root);
+
+		var sidebarController = new NSTreeController();
+		sidebarController.bind(NSBindingName.ContentArray, sidebarContent, "nodes", null);
+//		sidebar.bind(NSBindingName.Content, sidebarController, "arrangedObjects", null);
+//		col1.bind(NSBindingName.Value, sidebarController, "arrangedObjects.title", null);
 
 		var sidebarRect = new NSRect(sidebarX, sidebarY, sidebarWidth, sidebarHeight);
 		var clipView = new NSClipView();

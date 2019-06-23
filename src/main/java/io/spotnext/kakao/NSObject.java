@@ -1,12 +1,17 @@
 package io.spotnext.kakao;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.sun.jna.Pointer;
 
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.RuntimeUtils;
+import ca.weblite.objc.annotations.Msg;
+import io.spotnext.kakao.structs.NSBindingName;
+import io.spotnext.kakao.structs.NSBindingOption;
 
 public abstract class NSObject extends ca.weblite.objc.NSObject {
 
@@ -104,5 +109,16 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 
 			throw new IllegalStateException(e.getMessage());
 		}
+	}
+
+	public void bind(NSBindingName bindingName, NSObject observable, String keyPath, List<NSBindingOption> options) {
+		var opts = options != null ? options.stream().map(NSBindingOption::name).collect(Collectors.toList()).toArray() : null;
+
+		nativeHandle.send("bind:toObject:withKeyPath:options:", bindingName.id, observable, keyPath, opts);
+	}
+
+	@Msg(selector = "keyPathsForValuesAffectingValueForKey:", signature = "@:@")
+	public static NSObject keyPathsForValuesAffectingValueForKey(Proxy proxy) {
+		return null;
 	}
 }
