@@ -117,8 +117,19 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		nativeHandle.send("bind:toObject:withKeyPath:options:", bindingName.id, observable, keyPath, opts);
 	}
 
-	@Msg(selector = "keyPathsForValuesAffectingValueForKey:", signature = "@:@")
-	public static NSObject keyPathsForValuesAffectingValueForKey(Proxy proxy) {
+	@Msg(selector = "keyPathsForValuesAffectingValueForKey:", signature = "@@:@")
+	public Proxy keyPathsForValuesAffectingValueForKey(Object key) {
 		return null;
 	}
+
+	@Msg(selector = "valueForKey:", signature = "@@:@")
+	public Proxy valueForKey(Object key) {
+		return null;
+	}
+
+	@Msg(selector = "valueForUndefinedKey:", signature = "@@:@")
+	public Proxy valueForUndefinedKey(Object key) {
+		return null;
+	}
+	
 }
