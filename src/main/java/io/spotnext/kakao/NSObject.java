@@ -4,10 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import com.sun.jna.Pointer;
-import com.sun.jna.internal.ReflectionUtils;
 
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
@@ -40,7 +37,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	/**
-	 * Pass an already initialized {@link NativeObject}
+	 * Pass an already initialized {@link #nativeHandle}
 	 * 
 	 * @param proxy the already initialized (eg. alloc/init already done) proxy
 	 *              object
@@ -63,12 +60,16 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	protected void initWithProxy(Proxy proxy) {
-		var proxyClassLong = (long) proxy.send("class");
-		var proxyClassPointer = new Pointer(proxyClassLong);
-		var proxyClassProxy = new Proxy(proxyClassPointer);
-
-		// TODO: call real objc selector?
-		this.nativeClassName = proxyClassProxy.toString();
+		if (this.nativeClassName == null) {
+			// try to get the class name from the proxy object
+			var proxyClassLong = (long) proxy.send("class");
+			var proxyClassPointer = new Pointer(proxyClassLong);
+			var proxyClassProxy = new Proxy(proxyClassPointer);
+			
+			// TODO: call real objc selector?
+			this.nativeClassName = proxyClassProxy.toString();
+		}
+		
 		this.nativeHandle = proxy;
 	}
 
@@ -98,9 +99,9 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		return nativeHandle.sendBoolean("isKindOfClass", objPointer);
 	}
 
-	public String description() {
-		return nativeHandle.sendString("description");
-	}
+//	public String description() {
+//		return nativeHandle.sendString("description");
+//	}
 
 	public <T extends NSObject> T copy() {
 		var copiedProxy = nativeHandle.sendProxy("copyWithZone", new Object[0]);
@@ -155,4 +156,12 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		throw new PropertyAccessException("Call to unknown property " + key.toString());
 	}
 
+	public String description() {
+		return toString();
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getName();
+	}
 }

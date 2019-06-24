@@ -1,20 +1,14 @@
 package io.spotnext.kakao;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.foundation.NSRect;
-import io.spotnext.kakao.structs.DataContext;
 import io.spotnext.kakao.structs.DataGroupNode;
 import io.spotnext.kakao.structs.DataLeafNode;
 import io.spotnext.kakao.structs.DataNode;
-import io.spotnext.kakao.structs.NSArray;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
 import io.spotnext.kakao.structs.NSImage;
@@ -198,7 +192,7 @@ public class NSApplicationTest {
 		}
 
 		@Override
-		@Msg(selector = "outlineView:numberOfChildrenOfItem:", signature = "i@:@@")
+		@Msg(selector = "outlineView:numberOfChildrenOfItem:", signature = "l@:@@")
 		public int outlineViewNumberOfChildrenOfItem(Proxy outlineView, Proxy item) {
 			return item == null ? root.childCount() : item.sendInt("childCount");
 		}
@@ -212,7 +206,7 @@ public class NSApplicationTest {
 		@Override
 		@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@i@")
 		public Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item) {
-			return item == null ? root : new NSMutableArray<DataNode>(item.sendProxy("children"), DataNode.class).objectAtIndex(0);
+			return item == null ? root : item.sendProxy("children").sendProxy("objectAtIndex:", 0);
 		}
 	};
 }

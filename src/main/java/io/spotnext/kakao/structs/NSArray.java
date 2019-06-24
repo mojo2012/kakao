@@ -1,13 +1,15 @@
 package io.spotnext.kakao.structs;
 
 import java.util.ArrayList;
-
-import com.sun.jna.ptr.IntByReference;
+import java.util.List;
 
 import ca.weblite.objc.Proxy;
+import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 
 public class NSArray<T> extends NSObject {
+
+	protected final List<T> elements = new ArrayList<>();
 
 	protected Class<T> elementType = null;
 
@@ -23,7 +25,9 @@ public class NSArray<T> extends NSObject {
 		super(className, init);
 		this.elementType = elementType;
 
-		initWithProxy(alloc(className, "array"));
+		if (init) {
+			initWithProxy(alloc(className, "array"));
+		}
 	}
 
 	public NSArray(Proxy proxy, Class<T> elementType) {
@@ -31,28 +35,24 @@ public class NSArray<T> extends NSObject {
 		this.elementType = elementType;
 	}
 
+	@Msg(selector = "toArray", signature = "[@]@:")
 	public T[] toArray() {
-		var items = new ArrayList<T>();
-		int count = count();
-		for (var i = 0; i < count; i++) {
-			items.add(objectAtIndex(i));
-		}
-
-		return (T[]) items.toArray();
+		return (T[]) elements.toArray();
 	}
 
+	@Msg(selector = "objectAtIndex:", signature = "@@:I")
 	public T objectAtIndex(int index) {
-		var proxy = nativeHandle.sendProxy("objectAtIndex:", new IntByReference(index));
+		return elements.get(index);
+	}
 
-		return constructElementWrapper(proxy, elementType);
+	@Msg(selector = "containsObject:", signature = "b@:@")
+	public boolean containsObject(Object object) {
+		return elements.contains(object);
 	}
-	
-	public Proxy containsObject(NSObject object) {
-		return nativeHandle.sendProxy("containsObject:", object.getNativeHandle());
-	}
-	
+
+	@Msg(selector = "count", signature = "L@:")
 	public int count() {
-		return nativeHandle.sendInt("count");
+		return elements.size();
 	}
 
 }
