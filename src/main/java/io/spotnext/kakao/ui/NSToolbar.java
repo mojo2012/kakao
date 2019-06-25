@@ -1,5 +1,7 @@
 package io.spotnext.kakao.ui;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -11,7 +13,6 @@ import java.util.function.Consumer;
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
-import io.spotnext.kakao.structs.NSArray;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSMutableArray;
@@ -72,10 +73,10 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 		nativeHandle.send("insertItemWithItemIdentifier:atIndex:", identifier, index);
 	}
 
-	public NSArray<NSToolbarItem> getItems() {
-		var nsArray = new NSArray<>(nativeHandle.sendProxy("items"), NSToolbarItem.class);
+	public Collection<NSToolbarItem> getItems() {
+//		var nsArray = new NSArray<>(nativeHandle.sendProxy("items"), NSToolbarItem.class);
 
-		return nsArray;
+		return Collections.unmodifiableCollection(items.values());
 	}
 
 	public void setDelegate(NSObject delegate) {

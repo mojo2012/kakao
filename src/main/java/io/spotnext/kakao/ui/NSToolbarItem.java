@@ -95,7 +95,6 @@ public class NSToolbarItem extends NSObject {
 	public void setView(NSView view) {
 		if (view instanceof NSButton) {
 			view.setFocusRingType(NSFocusRingType.None);
-			view.setFrameSize(NSSize.of(60, 0));
 			((NSButton) view).setBezelSstyle(NSBezelStyle.TexturedRounded);
 		}
 

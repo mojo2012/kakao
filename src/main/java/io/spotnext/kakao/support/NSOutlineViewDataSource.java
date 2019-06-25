@@ -2,9 +2,17 @@ package io.spotnext.kakao.support;
 
 import ca.weblite.objc.Proxy;
 import ca.weblite.objc.annotations.Msg;
+import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.annotations.Optional;
+import io.spotnext.kakao.structs.DataGroupNode;
 
-public interface NSOutlineViewDataSource {
+public abstract class NSOutlineViewDataSource extends NSObject {
+
+	protected final DataGroupNode root;
+
+	public NSOutlineViewDataSource(DataGroupNode rootNode) {
+		this.root = rootNode;
+	}
 
 	/**
 	 * 
@@ -12,8 +20,10 @@ public interface NSOutlineViewDataSource {
 	 * @param item
 	 * @return NSInteger
 	 */
-	@Msg(selector = "outlineView:numberOfChildrenOfItem:", signature = "l@:@:@")
-	int outlineViewNumberOfChildrenOfItem(Proxy outlineView, Proxy item);
+	@Msg(selector = "outlineView:numberOfChildrenOfItem:", signature = "l@:@@")
+	public int outlineViewNumberOfChildrenOfItem(Proxy outlineView, Proxy item) {
+		return item == null ? root.childCount() : item.sendInt("childCount");
+	}
 
 	/**
 	 * 
@@ -22,8 +32,10 @@ public interface NSOutlineViewDataSource {
 	 * @param item
 	 * @return
 	 */
-	@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@:@:@")
-	Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item);
+	@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@i@")
+	public Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item) {
+		return item == null ? root : item.sendProxy("children").sendProxy("objectAtIndex:", 0);
+	}
 
 	/**
 	 * 
@@ -31,8 +43,10 @@ public interface NSOutlineViewDataSource {
 	 * @param item
 	 * @return
 	 */
-	@Msg(selector = "outlineView:isItemExpandable:", signature = "@@:@:@")
-	boolean outlineViewIsItemExpandable(Proxy outlineView, Proxy item);
+	@Msg(selector = "outlineView:isItemExpandable:", signature = "c@:@@")
+	public boolean outlineViewIsItemExpandable(Proxy outlineView, Proxy item) {
+		return item != null ? item.sendInt("childCount") > 0 : false;
+	}
 
 	/**
 	 * NOTE: This method is optional for the View Based OutlineView.
@@ -41,8 +55,10 @@ public interface NSOutlineViewDataSource {
 	 * @param tableColumn NSTableColumn
 	 * @param item
 	 */
-	@Msg(selector = "outlineView:objectValueForTableColumn:byItem:", signature = "@@:@:@:@")
-	Proxy outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item);
+	@Msg(selector = "outlineView:objectValueForTableColumn:byItem:", signature = "@@:@@@")
+	public Proxy outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
+		return item.sendProxy("title");
+	}
 
 	/**
 	 * NOTE: View Based OutlineView: This method is not applicable.
@@ -54,7 +70,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:setObjectValue:forTableColumn:byItem:")
-	default void outlineViewSetObjectValueForTableColumnByItem(Proxy outlineView, Proxy object, Proxy tableColumn,
+	public void outlineViewSetObjectValueForTableColumnByItem(Proxy outlineView, Proxy object, Proxy tableColumn,
 			Proxy item) {
 
 	}
@@ -68,7 +84,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:itemForPersistentObject:")
-	default Proxy outlineViewItemForPersistentObject(Proxy outlineView, Object object) {
+	public Proxy outlineViewItemForPersistentObject(Proxy outlineView, Object object) {
 		return null;
 	}
 
@@ -80,7 +96,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:persistentObjectForItem:")
-	default Proxy outlineViewPersistentObjectForItem(Proxy outlineView, Proxy item) {
+	public Proxy outlineViewPersistentObjectForItem(Proxy outlineView, Proxy item) {
 		return null;
 	}
 
@@ -94,7 +110,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:sortDescriptorsDidChange:")
-	default void outlineViewSortDescriptorsDidChangeOldDescriptors(Proxy outlineView, Proxy oldDescriptors) {
+	public void outlineViewSortDescriptorsDidChangeOldDescriptors(Proxy outlineView, Proxy oldDescriptors) {
 
 	}
 
@@ -117,7 +133,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:pasteboardWriterForItem:")
-	default Proxy outlineViewPasteboardWriterForItem(Proxy outlineView, Proxy item) {
+	public Proxy outlineViewPasteboardWriterForItem(Proxy outlineView, Proxy item) {
 		return null;
 	}
 
@@ -139,7 +155,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:draggingSession:willBeginAtPoint:forItems:")
-	default void outlineViewDraggingSessionWillBeginAtPointForItems(Proxy outlineView, Proxy session, Proxy screenPoint,
+	public void outlineViewDraggingSessionWillBeginAtPointForItems(Proxy outlineView, Proxy session, Proxy screenPoint,
 			Proxy draggedItems) {
 
 	}
@@ -157,7 +173,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:draggingSession:endedAtPoint:operation:")
-	default void outlineViewDraggingSessionEndedAtPointOperation(Proxy outlineView, Proxy session, Proxy screenPoint,
+	public void outlineViewDraggingSessionEndedAtPointOperation(Proxy outlineView, Proxy session, Proxy screenPoint,
 			Proxy operation) {
 
 	}
@@ -178,7 +194,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:writeItems:toPasteboard:")
-	default boolean outlineViewWriteItemsToPasteboard(Proxy outlineView, Proxy items, Proxy pasteboard) {
+	public boolean outlineViewWriteItemsToPasteboard(Proxy outlineView, Proxy items, Proxy pasteboard) {
 		return false;
 	}
 
@@ -196,7 +212,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:updateDraggingItemsForDrag:")
-	default void outlineViewUpdateDraggingItemsForDrag(Proxy outlineView, Proxy draggingInfo) {
+	public void outlineViewUpdateDraggingItemsForDrag(Proxy outlineView, Proxy draggingInfo) {
 
 	}
 
@@ -224,7 +240,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:validateDrop:proposedItem:proposedChildIndex:")
-	default Proxy outlineViewValidateDropProposedItemProposedChildIndex(Proxy outlineView, Proxy info, Proxy item,
+	public Proxy outlineViewValidateDropProposedItemProposedChildIndex(Proxy outlineView, Proxy info, Proxy item,
 			int index) {
 		return null;
 	}
@@ -245,7 +261,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:acceptDrop:item:childIndex:")
-	default boolean outlineViewAcceptDropItemChildIndex(Proxy outlineView, Proxy info, Proxy item, int index) {
+	public boolean outlineViewAcceptDropItemChildIndex(Proxy outlineView, Proxy info, Proxy item, int index) {
 		return false;
 	}
 
@@ -266,7 +282,7 @@ public interface NSOutlineViewDataSource {
 	 */
 	@Optional
 	@Msg(selector = "outlineView:namesOfPromisedFilesDroppedAtDestination:forDraggedItems:")
-	default Proxy outlineViewNamesOfPromisedFilesDroppedAtDestinationForDraggedItems(Proxy outlineView,
+	public Proxy outlineViewNamesOfPromisedFilesDroppedAtDestinationForDraggedItems(Proxy outlineView,
 			Proxy dropDestination, Proxy items) {
 		return null;
 	}

@@ -5,6 +5,8 @@ import io.spotnext.kakao.NSObject;
 
 public abstract class DataNode extends NSObject {
 	private String title;
+	private boolean isHeader;
+	private NSImage icon;
 
 	public DataNode(String title) {
 		this.title = title;
@@ -23,6 +25,31 @@ public abstract class DataNode extends NSObject {
 	@Msg(selector = "childCount", signature = "i@:")
 	public int childCount() {
 		return 0;
+	}
+
+	@Msg(selector = "isHeader", signature = "b@:")
+	public boolean isHeader() {
+		return isHeader;
+	}
+
+	@Msg(selector = "getIcon", signature = "@@:")
+	public NSImage getIcon() {
+		return icon;
+	}
+
+	@Msg(selector = "setTitle", signature = "v@:@")
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Msg(selector = "setTitle", signature = "v@:b")
+	public void setHeader(boolean isHeader) {
+		this.isHeader = isHeader;
+	}
+
+	@Msg(selector = "setTitle", signature = "v@:@")
+	public void setIcon(NSImage icon) {
+		this.icon = icon;
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package io.spotnext.kakao.structs;
 
 public enum NSImageName {
-	StatusNone("NSStatusNone"),
-	Info("NSInfo"), MobileMe("NSMobileMe"), ShareTemplate("NSShareTemplate");
+	StatusNone("NSStatusNone"), GoLeft("NSGoLeftTemplate"), GoRight("NSGoRightTemplate"), Info("NSInfo"), MobileMe("NSMobileMe"),
+	ShareTemplate("NSShareTemplate");
 
 	public String id;
 

@@ -96,4 +96,8 @@ public class NSButton extends NSView {
 		setTarget(this);
 		nativeHandle.send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
 	}
+
+	public void setEnabled(boolean value) {
+		nativeHandle.send("setEnabled:", value);
+	}
 }

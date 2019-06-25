@@ -8,17 +8,16 @@ import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.DataGroupNode;
 import io.spotnext.kakao.structs.DataLeafNode;
-import io.spotnext.kakao.structs.DataNode;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
-import io.spotnext.kakao.structs.NSMutableArray;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
 import io.spotnext.kakao.structs.Orientation;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
 import io.spotnext.kakao.support.NSOutlineViewDataSource;
+import io.spotnext.kakao.support.NSOutlineViewDelegate;
 import io.spotnext.kakao.ui.NSButton;
 import io.spotnext.kakao.ui.NSClipView;
 import io.spotnext.kakao.ui.NSOutlineView;
@@ -88,8 +87,10 @@ public class NSApplicationTest {
 		var root = new DataGroupNode("root");
 		var child1 = new DataLeafNode("leave");
 		root.addNodes(child1);
-		var datasSource = new SidebarDataSource(root);
-		sidebar.setDataSource(datasSource);
+		sidebar.setDataSource(new NSOutlineViewDataSource(root) {
+		});
+		sidebar.setDelegate(new NSOutlineViewDelegate() {
+		});
 
 		var sidebarRect = new NSRect(sidebarX, sidebarY, sidebarWidth, sidebarHeight);
 		var clipView = new NSClipView();
@@ -130,7 +131,7 @@ public class NSApplicationTest {
 		runButtonItem.setLabel("Run");
 		runButtonItem.setToolTip("Run Run Run!!!");
 //		runButtonItem.setImage(new NSImage(NSImageName.ShareTemplate));
-		runButtonItem.setView(new NSButton(NSImageName.ShareTemplate));
+		runButtonItem.setView(new NSButton(NSImageName.GoRight));
 		toolbar.insertItem(runButtonItem, itemIndex++);
 
 		var flexSpacer = NSToolbarItem.FLEXIBLE_SPACER;
@@ -168,36 +169,4 @@ public class NSApplicationTest {
 	private static void onToolbarAction(NSToolbarItem item) {
 		LOG.info("Test");
 	}
-
-	public static class SidebarDataSource extends NSObject implements NSOutlineViewDataSource {
-		private final DataGroupNode root;
-
-		public SidebarDataSource(DataGroupNode rootNode) {
-			this.root = rootNode;
-		}
-
-		@Override
-		@Msg(selector = "outlineView:objectValueForTableColumn:byItem:", signature = "@@:@@@")
-		public Proxy outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
-			return item.sendProxy("title");
-		}
-
-		@Override
-		@Msg(selector = "outlineView:numberOfChildrenOfItem:", signature = "l@:@@")
-		public int outlineViewNumberOfChildrenOfItem(Proxy outlineView, Proxy item) {
-			return item == null ? root.childCount() : item.sendInt("childCount");
-		}
-
-		@Override
-		@Msg(selector = "outlineView:isItemExpandable:", signature = "c@:@@")
-		public boolean outlineViewIsItemExpandable(Proxy outlineView, Proxy item) {
-			return item != null ? item.sendInt("childCount") > 0 : false;
-		}
-
-		@Override
-		@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@i@")
-		public Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item) {
-			return item == null ? root : item.sendProxy("children").sendProxy("objectAtIndex:", 0);
-		}
-	};
 }

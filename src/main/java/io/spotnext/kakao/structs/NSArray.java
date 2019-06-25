@@ -3,7 +3,6 @@ package io.spotnext.kakao.structs;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.weblite.objc.Proxy;
 import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 
@@ -30,10 +29,10 @@ public class NSArray<T> extends NSObject {
 		}
 	}
 
-	public NSArray(Proxy proxy, Class<T> elementType) {
-		super(proxy);
-		this.elementType = elementType;
-	}
+//	public NSArray(Proxy proxy, Class<T> elementType) {
+//		super(proxy);
+//		this.elementType = elementType;
+//	}
 
 	@Msg(selector = "toArray", signature = "[@]@:")
 	public T[] toArray() {
