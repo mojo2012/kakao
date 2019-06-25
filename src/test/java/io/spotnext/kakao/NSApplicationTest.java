@@ -85,20 +85,11 @@ public class NSApplicationTest {
 		sidebar.setOutlineTableColumn(col1);
 		sidebar.setTableHeaderView(null);
 
-//		var sidebarContent = new DataContext();
-
 		var root = new DataGroupNode("root");
 		var child1 = new DataLeafNode("leave");
 		root.addNodes(child1);
-//		sidebarContent.addNodes(root);
 		var datasSource = new SidebarDataSource(root);
-//		datasSource.setNodes(Arrays.asList(root));
 		sidebar.setDataSource(datasSource);
-
-//		var sidebarController = new NSTreeController();
-//		sidebarController.bind(NSBindingName.ContentArray, sidebarContent, "nodes", null);
-//		sidebar.bind(NSBindingName.Content, sidebarController.getNativeHandle(), "arrangedObjects", null);
-//		col1.bind(NSBindingName.Value, sidebarController.getNativeHandle(), "arrangedObjects.title", null);
 
 		var sidebarRect = new NSRect(sidebarX, sidebarY, sidebarWidth, sidebarHeight);
 		var clipView = new NSClipView();
