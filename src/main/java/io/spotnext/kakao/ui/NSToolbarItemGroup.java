@@ -21,9 +21,11 @@ public class NSToolbarItemGroup extends NSToolbarItem {
 			for (var item : items) {
 				nativeHandles.add(item.getNativeHandle());
 			}
-
+			
 			var array = new NSMutableArray<>(Proxy.class);
 			array.addObjects(nativeHandles);
+
+			nativeHandle.send("setSubitems:", array.getNativeHandle().sendProxy("copy"));
 
 			for (var item : items) {
 				item.setMinSize(new NSSize(40, 40));
@@ -32,7 +34,9 @@ public class NSToolbarItemGroup extends NSToolbarItem {
 			
 //			var arrayProxy = new Proxy()
 
-			nativeHandle.send("setSubitems:", array.getNativeHandle());
+			setMinSize(new NSSize(80, 40));
+			setMaxSize(new NSSize(1000, 40));
+			
 		}
 	}
 }

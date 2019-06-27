@@ -23,6 +23,7 @@ import io.spotnext.kakao.ui.NSClipView;
 import io.spotnext.kakao.ui.NSOutlineView;
 import io.spotnext.kakao.ui.NSScrollView;
 import io.spotnext.kakao.ui.NSSearchField;
+import io.spotnext.kakao.ui.NSSegmentedControl;
 import io.spotnext.kakao.ui.NSSplitView;
 import io.spotnext.kakao.ui.NSTableColumn;
 import io.spotnext.kakao.ui.NSTextField;
@@ -137,6 +138,17 @@ public class NSApplicationTest {
 		var flexSpacer = NSToolbarItem.FLEXIBLE_SPACER;
 		flexSpacer.setVisible(true);
 		toolbar.insertItem(flexSpacer, itemIndex++);
+
+		var segControl = new NSSegmentedControl(new NSRect(0, 0, 200, 40));
+		segControl.setSegmentCount(2);
+		segControl.setLabel("Segment 1", 0);
+		segControl.setLabel("Segment 2", 1);
+		segControl.setSelected(0);
+
+		var runStopButtonGroup = new NSToolbarItem("runStopButtonGroup");
+		runStopButtonGroup.setLabel("Run/Stop");
+		runStopButtonGroup.setView(segControl);
+		toolbar.insertItem(runStopButtonGroup, itemIndex++);
 
 		var searchFieldItem = new NSToolbarItem("searchFieldItem");
 		searchFieldItem.setLabel("Search");

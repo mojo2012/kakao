@@ -13,11 +13,10 @@ public interface NSToolbarDelegate {
 	 * 
 	 * @param toolbar
 	 * @param itemIdentifier can be a {@link NSString} or a {@link String}
-	 * @param index
 	 * @param willBeInsertedIntoToolbar
 	 * @return
 	 */
-	Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Long toolbar, Object itemIdentifier, Long index, Boolean willBeInsertedIntoToolbar);
+	Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Proxy toolbar, Object itemIdentifier, Boolean willBeInsertedIntoToolbar);
 
 	/**
 	 * Note: why is there no toolbar argument supported?
@@ -41,5 +40,9 @@ public interface NSToolbarDelegate {
 	 * @return Returns an {@link NSArray} of {@link NSString}s item identifiers that are visible on the toolbar by default.
 	 */
 	Proxy toolbarDefaultItemIdentifiers();
+
+	void toolbarWillAddItem(Proxy nsNotification);
+
+	void toolbarDidRemoveItem(Proxy nsNotification);
 
 }

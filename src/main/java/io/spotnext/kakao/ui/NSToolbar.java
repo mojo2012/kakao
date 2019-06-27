@@ -84,8 +84,9 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	@Override
-	@Msg(selector = "toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:", signature = "@:*:@:B")
-	public Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Long toolbar, Object itemIdentifier, Long index, Boolean willBeInsertedIntoToolbar) {
+	@Msg(selector = "toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:", signature = "@@:@@B")
+	public Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Proxy toolbar, Object itemIdentifier,
+			Boolean flag) {
 		// toString of an NSString is the actual string ;-) weird ...
 		var itemId = itemIdentifier.toString();
 
@@ -122,7 +123,7 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	@Override
-	@Msg(selector = "toolbarDefaultItemIdentifiers:", signature = "@:@")
+	@Msg(selector = "toolbarDefaultItemIdentifiers:", signature = "@@:")
 	public Proxy toolbarDefaultItemIdentifiers() {
 		var identifiers = new NSMutableArray<String>(String.class);
 
@@ -134,7 +135,7 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	@Override
-	@Msg(selector = "toolbarAllowedItemIdentifiers:", signature = "@:@")
+	@Msg(selector = "toolbarAllowedItemIdentifiers:", signature = "@@:")
 	public Proxy toolbarAllowedItemIdentifiers() {
 		var identifiers = new NSMutableArray<String>(String.class);
 
@@ -156,29 +157,33 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	@Override
-	@Msg(selector = "toolbarSelectableItemIdentifiers:", signature = "@:@")
+	@Msg(selector = "toolbarSelectableItemIdentifiers:", signature = "@@:")
 	public Proxy toolbarSelectableItemIdentifiers() {
 		return null;
 	}
 
+	@Override
 	@Msg(selector = "toolbarWillAddItem:", signature = "v@:@")
-	public void toolbarWillAddItem(Proxy itemIdentifier) {
-		setToolbarItemVisible(itemIdentifier, true);
+	public void toolbarWillAddItem(Proxy nsNotification) {
+		setToolbarItemVisible(nsNotification, true);
 	}
 
+	@Override
 	@Msg(selector = "toolbarDidRemoveItem:", signature = "v@:@")
-	public void toolbarDidRemoveItem(Proxy itemIdentifier) {
-		setToolbarItemVisible(itemIdentifier, false);
+	public void toolbarDidRemoveItem(Proxy nsNotification) {
+		setToolbarItemVisible(nsNotification, false);
 	}
 
 	/**
 	 * Update the visibility if the item is removed or added from the toolbar
 	 * 
-	 * @param itemIdentifier
+	 * @param string NSString
 	 * @param value
 	 */
-	private void setToolbarItemVisible(Proxy itemIdentifier, boolean value) {
-		var id = itemIdentifier.toString();
+	private void setToolbarItemVisible(Proxy nsNotification, boolean value) {
+		var userInfo = nsNotification.getProxy("userInfo");
+		var item = userInfo.getProxy("item");
+		var id = item.get("itemIdentifier").toString();
 		Optional.ofNullable(items.get(id)).ifPresent(i -> i.setVisible(value));
 	}
 

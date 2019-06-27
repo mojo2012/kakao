@@ -34,7 +34,9 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@i@")
 	public Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item) {
-		return item == null ? root : item.sendProxy("children").sendProxy("objectAtIndex:", 0);
+		var node = item != null ? item : root;
+
+		return node.sendProxy("children").sendProxy("objectAtIndex:", index);
 	}
 
 	/**
@@ -56,8 +58,10 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 * @param item
 	 */
 	@Msg(selector = "outlineView:objectValueForTableColumn:byItem:", signature = "@@:@@@")
-	public Proxy outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
-		return item.sendProxy("title");
+	public String outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
+		var title = item.send("title").toString();
+
+		return title;
 	}
 
 	/**
