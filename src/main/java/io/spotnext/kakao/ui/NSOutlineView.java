@@ -53,4 +53,14 @@ public class NSOutlineView extends NSView {
 	public void setTableHeaderView(NSTableHeaderView header) {
 		nativeHandle.send("setHeaderView:", header != null ? header.getNativeHandle() : null);
 	}
+
+	public NSTableCellView makeView(String identifier, NSOutlineViewDelegate delegate) {
+		var proxy = nativeHandle.sendProxy("makeViewWithIdentifier:owner:", identifier, delegate);
+
+		if (proxy != null) {
+			return new NSTableCellView(proxy);
+		}
+
+		return null;
+	}
 }

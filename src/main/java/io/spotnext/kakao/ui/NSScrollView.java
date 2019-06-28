@@ -41,4 +41,8 @@ public class NSScrollView extends NSView {
 		nativeHandle.set("contentView", clipView.getNativeHandle());
 	}
 	
+	public void setDocumentView(NSView view) {
+		nativeHandle.set("documentView", view.getNativeHandle());
+	}
+	
 }
