@@ -57,10 +57,14 @@ public class NSOutlineView extends NSView {
 	public NSTableCellView makeView(String identifier, NSOutlineViewDelegate delegate) {
 		var proxy = nativeHandle.sendProxy("makeViewWithIdentifier:owner:", identifier, delegate);
 
+		NSTableCellView view = null;
+		
 		if (proxy != null) {
-			return new NSTableCellView(proxy);
+			view = new NSTableCellView(proxy);
+		} else {
+			view = new NSTableCellView();
 		}
 
-		return null;
+		return view;
 	}
 }
