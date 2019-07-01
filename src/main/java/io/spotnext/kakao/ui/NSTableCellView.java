@@ -1,13 +1,12 @@
 package io.spotnext.kakao.ui;
 
 import ca.weblite.objc.Proxy;
+import io.spotnext.kakao.foundation.NSRect;
 
 public class NSTableCellView extends NSView {
-//	public NSTableCellView(String text) {
-//		super("NSTableCellView", false);
-//
-//		nativeHandle = init(alloc(nativeClassName, SELECTOR_ALLOC), "initTextCell:", text);
-//	}
+	public NSTableCellView(NSRect frame) {
+		super("NSTableCellView", frame);
+	}
 
 	public NSTableCellView(Proxy proxy) {
 		super(proxy);

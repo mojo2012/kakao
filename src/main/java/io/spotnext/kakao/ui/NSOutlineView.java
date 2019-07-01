@@ -63,4 +63,12 @@ public class NSOutlineView extends NSView {
 
 		return null;
 	}
+
+	public double getWidth() {
+		return nativeHandle.getDouble("width");
+	}
+
+	public double getRowHeight() {
+		return nativeHandle.getDouble("rowHeight");
+	}
 }

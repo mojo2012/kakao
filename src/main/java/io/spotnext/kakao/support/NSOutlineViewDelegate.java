@@ -5,6 +5,7 @@ import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.ui.NSOutlineView;
+import io.spotnext.kakao.ui.NSTableCellView;
 import io.spotnext.kakao.ui.NSTextField;
 import io.spotnext.kakao.ui.NSView;
 
@@ -30,9 +31,12 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 	public Proxy outlineViewViewForTableColumn(Proxy outlineView, Proxy tableColumn, Proxy item) {
 
 		var outline = new NSOutlineView(outlineView);
-		NSView view = outline.makeView("view", this);
+		NSTableCellView view = outline.makeView("view", this);
 
 		if (view == null) {
+			var size = new NSRect(0, 0, outline.getWidth(), outline.getRowHeight());
+			view = new NSTableCellView(size);
+			
 			var textView = new NSTextField(new NSRect(0, 0, 0, 0));
 			view = textView;
 
