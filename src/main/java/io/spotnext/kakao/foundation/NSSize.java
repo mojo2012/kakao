@@ -31,6 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NSSize extends Structure implements Structure.ByValue {
+	public static final NSSize DEFAULT = new NSSize(0., 0.);
+
 	public CGFloat width;
 	public CGFloat height;
 
@@ -40,7 +42,7 @@ public class NSSize extends Structure implements Structure.ByValue {
 	}
 
 	public NSSize(Proxy proxy) {
-		
+
 	}
 
 	public NSSize() {

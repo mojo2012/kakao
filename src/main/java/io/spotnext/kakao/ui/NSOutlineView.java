@@ -2,6 +2,8 @@ package io.spotnext.kakao.ui;
 
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.foundation.NSSize;
+import io.spotnext.kakao.structs.NSTableViewRowSizeStyle;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
 import io.spotnext.kakao.support.NSOutlineViewDataSource;
 import io.spotnext.kakao.support.NSOutlineViewDelegate;
@@ -58,13 +60,22 @@ public class NSOutlineView extends NSView {
 		var proxy = nativeHandle.sendProxy("makeViewWithIdentifier:owner:", identifier, delegate);
 
 		NSTableCellView view = null;
-		
+
 		if (proxy != null) {
 			view = new NSTableCellView(proxy);
 		} else {
 			view = new NSTableCellView();
+			view.setFrameSize(new NSSize(40.0, getRowHeight()));
 		}
 
 		return view;
+	}
+
+	public double getRowHeight() {
+		return nativeHandle.sendDouble("rowHeight");
+	}
+
+	public void setRowSizeStyle(NSTableViewRowSizeStyle value) {
+		nativeHandle.send("setRowSizeStyle:", value.id);
 	}
 }

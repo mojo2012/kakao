@@ -65,14 +65,15 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 			var proxyClassLong = (long) proxy.send("class");
 			var proxyClassPointer = new Pointer(proxyClassLong);
 			var proxyClassProxy = new Proxy(proxyClassPointer);
-			
+
 			// TODO: call real objc selector?
 			this.nativeClassName = proxyClassProxy.toString();
 		}
-		
+
 		this.nativeHandle = proxy;
 	}
 
+	@Msg(selector = "handler", signature = "@@:")
 	public Proxy getNativeHandle() {
 		return nativeHandle;
 	}
@@ -159,7 +160,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	public String description() {
 		return toString();
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getClass().getName();

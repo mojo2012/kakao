@@ -32,7 +32,7 @@ public abstract class DataNode extends NSObject {
 		return isHeader;
 	}
 
-	@Msg(selector = "getIcon", signature = "@@:")
+	@Msg(selector = "icon", signature = "@@:")
 	public NSImage getIcon() {
 		return icon;
 	}

@@ -5,12 +5,11 @@ import io.spotnext.kakao.foundation.NSRect;
 
 public class NSTableCellView extends NSView {
 	public NSTableCellView() {
-		super("NSTableCellView", new NSRect(0, 0, 100, 100));
+		super("NSTableCellView", true);
+	}
 
-		var frame = new NSRect(0, 0, 100, 100);
-
-		setTextField(new NSTextField(frame));
-		setImageView(new NSImageView(frame));
+	public NSTableCellView(NSRect frame) {
+		super("NSTableCellView", frame);
 	}
 
 	public NSTableCellView(Proxy proxy) {
@@ -26,15 +25,35 @@ public class NSTableCellView extends NSView {
 	}
 
 	public NSTextField getTextField() {
-		var proxy = nativeHandle.getProxy("textField");
+		final var proxy = nativeHandle.getProxy("textField");
+		NSTextField textField = null;
 
-		return new NSTextField(proxy);
+		if (proxy == null) {
+			textField = new NSTextField(NSRect.DEFAULT);
+			textField.setBordered(false);
+			textField.setDrawsBackground(false);
+			setTextField(textField);
+			addSubview(textField);
+		} else {
+			textField = new NSTextField(proxy);
+		}
+
+		return textField;
 	}
 
-	public NSView getImageView() {
-		var proxy = nativeHandle.getProxy("imageView");
+	public NSImageView getImageView() {
+		final var proxy = nativeHandle.getProxy("imageView");
+		NSImageView imageView = null;
 
-		return new NSImageView(proxy);
+		if (proxy == null) {
+			imageView = new NSImageView(NSRect.DEFAULT);
+			setImageView(imageView);
+			addSubview(imageView);
+		} else {
+			imageView = new NSImageView(proxy);
+		}
+
+		return imageView;
 	}
 
 }

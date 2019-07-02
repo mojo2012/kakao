@@ -48,4 +48,10 @@ public class NSTableColumn extends NSObject {
 	public String getTitle() {
 		return nativeHandle.sendString("title");
 	}
+	
+
+	public double getWidth() {
+		return nativeHandle.getDouble("width");
+	}
+
 }

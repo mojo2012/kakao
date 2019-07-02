@@ -6,6 +6,7 @@ import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
+import io.spotnext.kakao.structs.NSImage;
 
 public class NSView extends NSObject {
 

@@ -28,6 +28,6 @@ public class NSImageView extends NSView {
 	}
 	
 	public void setImage(NSImage image) {
-		var proxy = nativeHandle.sendProxy("setImage:", image.getNativeHandle());
+		nativeHandle.send("setImage:", image.getNativeHandle());
 	}
 }

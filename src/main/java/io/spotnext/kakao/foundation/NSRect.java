@@ -35,6 +35,8 @@ import ca.weblite.objc.Proxy;
  * @author <a href="mailto:harald.kuhr@gmail.com">Harald Kuhr</a>
  */
 public class NSRect extends Structure implements Structure.ByValue {
+	public static final NSRect DEFAULT = new NSRect(0., 0., 0., 0.);
+
 	private static final String REGEX_PATTERN = "NSRect:[\\s]{0,1}\\{\\{([0-9].*?),[\\s]{0,1}([0-9].*?)\\},[\\s]{0,1}\\{([0-9].*?)\\,\\s([0-9].*?)\\}\\}";
 	private static final Pattern PATTER = Pattern.compile(REGEX_PATTERN);
 
@@ -81,7 +83,8 @@ public class NSRect extends Structure implements Structure.ByValue {
 	}
 
 	public Rectangle2D getBounds() {
-		return new Rectangle2D.Double(origin.x.doubleValue(), origin.y.doubleValue(), size.width.doubleValue(), size.height.doubleValue());
+		return new Rectangle2D.Double(origin.x.doubleValue(), origin.y.doubleValue(), size.width.doubleValue(),
+				size.height.doubleValue());
 	}
 
 	@Override
@@ -90,22 +93,22 @@ public class NSRect extends Structure implements Structure.ByValue {
 	}
 
 	public NSRect copy() {
-		return new NSRect(origin.x.doubleValue(), origin.y.doubleValue(),
-				size.width.doubleValue(), size.height.doubleValue());
+		return new NSRect(origin.x.doubleValue(), origin.y.doubleValue(), size.width.doubleValue(),
+				size.height.doubleValue());
 	}
 
 	// NSRect: {{0, 0}, {600, 422}}
 	public static NSRect parse(String objcDescription) {
-			var matcher = PATTER.matcher(objcDescription);
-			if (matcher.matches() && matcher.groupCount() == 4) {
-				var x = Double.parseDouble(matcher.group(1));
-				var y = Double.parseDouble(matcher.group(2));
-				var width = Double.parseDouble(matcher.group(3));
-				var height = Double.parseDouble(matcher.group(4));
-				
-				return new NSRect(x, y, width, height); 
-			}
-			
-	        throw new IllegalStateException("Could not parse objective-c description");
-	    }
+		var matcher = PATTER.matcher(objcDescription);
+		if (matcher.matches() && matcher.groupCount() == 4) {
+			var x = Double.parseDouble(matcher.group(1));
+			var y = Double.parseDouble(matcher.group(2));
+			var width = Double.parseDouble(matcher.group(3));
+			var height = Double.parseDouble(matcher.group(4));
+
+			return new NSRect(x, y, width, height);
+		}
+
+		throw new IllegalStateException("Could not parse objective-c description");
+	}
 }
