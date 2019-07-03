@@ -19,7 +19,11 @@ public class NSButton extends NSView {
 	private Consumer<NSButton> actionListener;
 
 	public NSButton(String title) {
-		this(title, null);
+		this(title, (NSImage) null);
+	}
+
+	public NSButton(NSImage image) {
+		this(null, image);
 	}
 
 	public NSButton(NSImageName imageName) {
@@ -27,6 +31,10 @@ public class NSButton extends NSView {
 	}
 
 	public NSButton(String title, NSImageName image) {
+		this(title, new NSImage(image));
+	}
+
+	public NSButton(String title, NSImage image) {
 		super("NSButton", false);
 
 		final String selector;
@@ -37,7 +45,7 @@ public class NSButton extends NSView {
 			arguments.addAll(Arrays.asList(title, new NSImage(image).getNativeHandle()));
 		} else if (image != null) {
 			selector = "buttonWithImage:target:action:";
-			arguments.add(new NSImage(image).getNativeHandle());
+			arguments.add(image.getNativeHandle());
 		} else {
 			selector = "buttonWithTitle:target:action:";
 			arguments.add(title);

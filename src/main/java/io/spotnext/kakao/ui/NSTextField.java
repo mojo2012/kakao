@@ -2,6 +2,7 @@ package io.spotnext.kakao.ui;
 
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.support.NSFont;
 
 public class NSTextField extends NSView {
 
@@ -55,5 +56,18 @@ public class NSTextField extends NSView {
 	
 	public boolean isSelectable() {
 		return nativeHandle.getBoolean("isSelectable");
+	}
+	
+	
+	public int getMaximumNumberOfLines() {
+		return nativeHandle.sendInt("getMaximumNumberOfLines");
+	}
+	
+	public void setMaximumNumberOfLines(int value) {
+		nativeHandle.send("setMaximumNumberOfLines:", value);
+	}
+
+	public void setFont(NSFont font) {
+		nativeHandle.send("setFont:", font.getNativeHandle());
 	}
 }

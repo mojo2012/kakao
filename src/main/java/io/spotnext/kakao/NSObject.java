@@ -165,4 +165,9 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	public String toString() {
 		return this.getClass().getName();
 	}
+	
+	@Msg(selector="getJavaObject", signature="@@:")
+	public Object getJavaObject() {
+		return this;
+	}
 }

@@ -1,14 +1,19 @@
 package io.spotnext.kakao.structs;
 
+import java.util.UUID;
+
 import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 
 public abstract class DataNode extends NSObject {
+	private UUID uid;
 	private String title;
 	private boolean isHeader;
 	private NSImage icon;
+	private Object object;
 
 	public DataNode(String title) {
+		this.uid = UUID.randomUUID();
 		this.title = title;
 	}
 
@@ -54,6 +59,20 @@ public abstract class DataNode extends NSObject {
 
 	@Override
 	public String toString() {
-		return nativeHandle.send("title").toString();
+		return title;
 	}
+
+	@Msg(selector = "uid", signature = "@@:")
+	public String getUid() {
+		return uid.toString();
+	}
+
+	public Object getObject() {
+		return object;
+	}
+
+	public void setObject(Object object) {
+		this.object = object;
+	}
+
 }

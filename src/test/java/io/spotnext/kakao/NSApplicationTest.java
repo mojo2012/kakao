@@ -3,8 +3,6 @@ package io.spotnext.kakao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ca.weblite.objc.Proxy;
-import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.DataGroupNode;
 import io.spotnext.kakao.structs.DataLeafNode;

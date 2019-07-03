@@ -85,5 +85,10 @@ public class NSView extends NSObject {
 
 		nativeHandle.send("setAutoresizingMask:", mask);
 	}
+//
+//	public void setBackgroundColor(String string) {
+//		var layerProxy = nativeHandle.sendProxy("layer");
+//		layerProxy.send("setBackgroundColor:", )
+//	}
 	
 }

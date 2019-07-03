@@ -24,7 +24,7 @@ public class DataGroupNode extends DataNode {
 	public NSMutableArray<DataNode> getNodes() {
 		return nodes;
 	}
-	
+
 	@Override
 	@Msg(selector = "childCount", signature = "i@:")
 	public int childCount() {

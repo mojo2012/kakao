@@ -5,6 +5,7 @@ import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.annotations.Optional;
 import io.spotnext.kakao.structs.DataGroupNode;
+import io.spotnext.kakao.structs.DataNode;
 
 public abstract class NSOutlineViewDataSource extends NSObject {
 
@@ -14,6 +15,37 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 		this.root = rootNode;
 	}
 
+	public <T extends DataNode> T getNodeByUid(String uid) {
+		if (root.getUid().equals(uid)) {
+			return (T) root;
+		}
+		
+		return getSubNodeById(root, uid);
+	}
+	
+	private <T extends DataNode> T getSubNodeById(DataGroupNode node, String uid) {
+		T foundNode = null;
+		
+		// Object was necessary, as otherwise there was a class cast exception
+		for (Object sn : node.getNodes().toArray()) {
+			var subNode = (DataNode) sn;
+			
+			if (subNode.getUid().equals(uid)) {
+				foundNode = (T) subNode;
+			}
+			
+			if (foundNode == null && subNode instanceof DataGroupNode) {
+				foundNode = getSubNodeById((DataGroupNode) subNode, uid);
+			}
+			
+			if (foundNode != null) {
+				return foundNode;
+			}
+		}
+		
+		return foundNode;
+	}
+	
 	/**
 	 * 
 	 * @param outlineView

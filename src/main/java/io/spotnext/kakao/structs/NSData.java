@@ -1,9 +1,9 @@
 package io.spotnext.kakao.structs;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import io.spotnext.kakao.NSObject;
+import io.spotnext.kakao.exceptions.IOException;
 
 public class NSData extends NSObject {
 
@@ -18,12 +18,16 @@ public class NSData extends NSObject {
 	}
 
 	public static NSData dataFromResource(InputStream stream) throws IOException {
-		var data = stream.readAllBytes();
-		return new NSData(data);
+		try {
+			var data = stream.readAllBytes();
+			return new NSData(data);
+		} catch (Exception e) {
+			throw new IOException(e);
+		}
 	}
 
 	public static NSData dataFromResource(String resourceName) throws IOException {
-		return dataFromResource(ClassLoader.getSystemClassLoader().getResourceAsStream(resourceName));
+		return dataFromResource(NSData.class.getResourceAsStream(resourceName));
 	}
 
 }
