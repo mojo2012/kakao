@@ -32,7 +32,7 @@ public abstract class DataNode extends NSObject {
 		return 0;
 	}
 
-	@Msg(selector = "isHeader", signature = "b@:")
+	@Msg(selector = "isHeader", signature = "c@:")
 	public boolean isHeader() {
 		return isHeader;
 	}

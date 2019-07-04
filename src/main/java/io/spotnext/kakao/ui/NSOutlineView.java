@@ -13,7 +13,7 @@ public class NSOutlineView extends NSView {
 
 	private NSOutlineViewDataSource dataSource;
 	private NSOutlineViewDelegate delegate;
-	
+
 	public NSOutlineView(Proxy proxy) {
 		super(proxy);
 	}
@@ -29,6 +29,14 @@ public class NSOutlineView extends NSView {
 	public void setDelegate(NSOutlineViewDelegate delegate) {
 		this.delegate = delegate;
 		nativeHandle.send("setDelegate:", delegate);
+	}
+
+	public NSOutlineViewDelegate getDelegate() {
+		return delegate;
+	}
+
+	public NSOutlineViewDataSource getDataSource() {
+		return dataSource;
 	}
 
 	public void setDataSource(NSOutlineViewDataSource dataSource) {
@@ -88,15 +96,26 @@ public class NSOutlineView extends NSView {
 	public int getSelectedRow() {
 		return nativeHandle.sendInt("selectedRow");
 	}
-	
+
 	public DataNode getItemAtRow(int rowIndex) {
 		var proxy = nativeHandle.sendProxy("itemAtRow:", rowIndex);
 		var nodeId = proxy.sendString("uid");
 		return dataSource.getNodeByUid(nodeId);
 	}
-	
-	
+
 	public DataNode getSelectedItem() {
 		return getItemAtRow(getSelectedRow());
+	}
+
+	public void setFloatsGroupRows(boolean value) {
+		nativeHandle.send("setFloatsGroupRows:", value);
+	}
+
+	protected void expandItem(DataNode node, boolean expandChildren) {
+		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
+	}
+
+	public void expandItem(DataNode node) {
+		expandItem(node, false);
 	}
 }

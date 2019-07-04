@@ -86,9 +86,11 @@ public class NSApplicationTest {
 		var root = new DataGroupNode("root");
 		var child1 = new DataLeafNode("leave");
 		root.addNodes(child1);
-		sidebar.setDataSource(new NSOutlineViewDataSource(root) {
-		});
-		sidebar.setDelegate(new NSOutlineViewDelegate() {
+		
+		var dataSource = new NSOutlineViewDataSource(root) {
+		};
+		sidebar.setDataSource(dataSource);
+		sidebar.setDelegate(new NSOutlineViewDelegate(sidebar) {
 		});
 
 		var sidebarRect = new NSRect(sidebarX, sidebarY, sidebarWidth, sidebarHeight);

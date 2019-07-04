@@ -16,7 +16,7 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 	public NSOutlineViewDelegate(NSOutlineView outlineView) {
 		this.outlineView = outlineView;
 	}
-	
+
 //	@Msg(selector = "outlineView:dataCellForTableColumn:item:", signature = "@@:@@@")
 //	public NSObject outlineViewDataCellForTableColumnItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
 //		return null;
@@ -27,7 +27,12 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 		final var outline = new NSOutlineView(outlineView);
 		final var view = outline.makeView("view", this);
 
-		view.getTextField().setText(item.send("title").toString());
+		var textField = view.getTextField();
+		textField.setText(item.send("title").toString());
+		
+//		if (item.sendBoolean("isHeader")) {
+//			textField.
+//		}
 
 		return view.getNativeHandle();
 	}
@@ -58,4 +63,17 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 		this.eventHandler = eventHandler;
 	}
 
+	@Msg(selector = "outlineView:isGroupItem:", signature = "c@:@@")
+	public boolean outlineViewGroupHeader(Proxy outlineView, Proxy item) {
+		return isGroupHeader(item);
+	}
+	
+	@Msg(selector = "outlineView:shouldSelectItem:" , signature = "c@:@@")
+	public boolean outlineViewShouldSelectItem(Proxy outlineView, Proxy item) {
+		return !isGroupHeader(item);
+	}
+	
+	private boolean isGroupHeader(Proxy item) {
+		return item.sendBoolean("isHeader");
+	}
 }
