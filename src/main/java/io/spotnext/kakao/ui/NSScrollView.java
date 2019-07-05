@@ -2,6 +2,7 @@ package io.spotnext.kakao.ui;
 
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.structs.NSBorderType;
 
 public class NSScrollView extends NSView {
 
@@ -11,6 +12,10 @@ public class NSScrollView extends NSView {
 
 	public NSScrollView(NSRect frame) {
 		super("NSScrollView", frame);
+		
+		setHorizontalScroller(true);
+		setVerticalScroller(true);
+		setAutohideScroller(true);
 	}
 
 	public void setIdentifier(String identifier) {
@@ -22,7 +27,7 @@ public class NSScrollView extends NSView {
 	}
 
 	public void setVerticalScroller(boolean visible) {
-		nativeHandle.set("hasVerticalScroller", visible);
+		nativeHandle.send("setHasVerticalScroller:", visible);
 	}
 
 	public boolean hasVerticalScroller() {
@@ -30,11 +35,15 @@ public class NSScrollView extends NSView {
 	}
 
 	public void setHorizontalScroller(boolean visible) {
-		nativeHandle.set("hasHorizontalScroller", visible);
+		nativeHandle.send("setHasHorizontalScroller:", visible);
 	}
 
 	public boolean hasHorizontalScroller() {
 		return nativeHandle.getBoolean("hasHorizontalScroller");
+	}
+	
+	public void setAutohideScroller(boolean value) {
+		nativeHandle.send("setAutohidesScrollers:", value);
 	}
 
 	public void setContentView(NSClipView clipView) {
@@ -47,6 +56,10 @@ public class NSScrollView extends NSView {
 		if (view != null) {
 			nativeHandle.set("documentView", view.getNativeHandle());
 		}
+	}
+
+	public void setBorderType(NSBorderType value) {
+		nativeHandle.send("setBorderType:", value.id);
 	}
 
 }

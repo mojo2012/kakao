@@ -2,6 +2,7 @@ package io.spotnext.kakao.ui;
 
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.structs.NSLineBreakMode;
 import io.spotnext.kakao.support.NSFont;
 
 public class NSTextField extends NSView {
@@ -70,4 +71,18 @@ public class NSTextField extends NSView {
 	public void setFont(NSFont font) {
 		nativeHandle.send("setFont:", font.getNativeHandle());
 	}
+	
+	public void setLineBreakMode(NSLineBreakMode mode) {
+		nativeHandle.sendProxy("cell").sendProxy("setLineBreakMode:", mode.id);
+	}
+	
+	public void setTruncatesLastVisibleLine(boolean value) {
+		nativeHandle.sendProxy("cell").send("setTruncatesLastVisibleLine:", value);
+	}
+
+	public void setWraps(boolean value) {
+		nativeHandle.sendProxy("cell").send("setWraps:", value);		
+	}
+	
+//	iew!.cell?.lineBreakMode = .byTruncatingTail
 }

@@ -6,7 +6,6 @@ import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
-import io.spotnext.kakao.structs.NSImage;
 
 public class NSView extends NSObject {
 
@@ -20,7 +19,8 @@ public class NSView extends NSObject {
 	}
 
 	/**
-	 * Returns an uninitialized instance (only alloc has been called) Either call {@link #initWithFrame(NSRect)} or some other init method to complete
+	 * Returns an uninitialized instance (only alloc has been called) Either call
+	 * {@link #initWithFrame(NSRect)} or some other init method to complete
 	 * initialization.
 	 */
 	protected NSView(String className) {
@@ -37,7 +37,8 @@ public class NSView extends NSObject {
 	}
 
 	/**
-	 * Returns an uninitialized instance (only alloc has been called) Either call {@link #initWithFrame(NSRect)} or some other init method to complete
+	 * Returns an uninitialized instance (only alloc has been called) Either call
+	 * {@link #initWithFrame(NSRect)} or some other init method to complete
 	 * initialization.
 	 */
 	protected NSView(String className, boolean defaultAllocInit) {
@@ -74,6 +75,14 @@ public class NSView extends NSObject {
 		return nativeHandle.getBoolean("wantsLayer");
 	}
 
+	public void setAutoresizesSubviews(boolean value) {
+		nativeHandle.send("setAutoresizesSubviews:", value);
+	}
+
+	public boolean isAutoresizesSubviews() {
+		return nativeHandle.getBoolean("autoresizesSubviews");
+	}
+
 	public void setAutoresizingMask(NSAutoresizingMaskOptions... values) {
 		var mask = 0;
 
@@ -90,5 +99,12 @@ public class NSView extends NSObject {
 //		var layerProxy = nativeHandle.sendProxy("layer");
 //		layerProxy.send("setBackgroundColor:", )
 //	}
+
+	public void setWantsLayer(boolean value) {
+		nativeHandle.send("setWantsLayer:", value);
+	}
 	
+	public void setCanDrawSubviewsIntoLayer(boolean value) {
+		nativeHandle.send("setCanDrawSubviewsIntoLayer:", value);
+	}
 }

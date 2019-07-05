@@ -116,4 +116,9 @@ public class NSWindow extends NSView {
 		nativeHandle.send("setMinSize:", size);
 	}
 
+	public void setContentView(NSView clipView) {
+		if (clipView != null) {
+			nativeHandle.set("contentView", clipView.getNativeHandle());
+		}
+	}
 }

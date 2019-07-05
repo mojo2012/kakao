@@ -6,6 +6,8 @@ import io.spotnext.kakao.foundation.NSRect;
 public class NSTableCellView extends NSView {
 	public NSTableCellView() {
 		super("NSTableCellView", true);
+		
+		setAutoresizesSubviews(true);
 	}
 
 	public NSTableCellView(NSRect frame) {
@@ -32,6 +34,9 @@ public class NSTableCellView extends NSView {
 			textField = new NSTextField(NSRect.DEFAULT);
 			textField.setBordered(false);
 			textField.setDrawsBackground(false);
+			textField.setWraps(false);
+//			textField.setLineBreakMode(NSLineBreakMode.ByWordWrapping);
+//			textField.setTruncatesLastVisibleLine(true);
 			setTextField(textField);
 			addSubview(textField);
 		} else {

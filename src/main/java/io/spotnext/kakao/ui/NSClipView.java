@@ -12,14 +12,6 @@ public class NSClipView extends NSView {
 		super("NSClipView");
 	}
 
-	public void setAutoresizesSubviews(boolean value) {
-		nativeHandle.send("setAutoresizesSubviews:", value);
-	}
-
-	public boolean isAutoresizesSubviews() {
-		return nativeHandle.getBoolean("autoresizesSubviews");
-	}
-
 	public void setDocumentView(NSView view) {
 		nativeHandle.set("documentView", view.getNativeHandle());
 	}
