@@ -101,9 +101,13 @@ public class NSApplication extends NSObject {
 	public void setApplicationIconImage(String iconPath) {
 		var image = new NSImage(iconPath);
 
+		setApplicationIconImage(image);
+	}
+	
+	public void setApplicationIconImage(NSImage image) {
 		nativeHandle.send("setApplicationIconImage:", image.getNativeHandle());
 	}
-
+	
 	public void activateIgnoringOtherApps(boolean value) {
 		nativeHandle.send("activateIgnoringOtherApps:", value);
 	}
