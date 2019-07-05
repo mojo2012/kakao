@@ -85,7 +85,8 @@ public class NSApplication extends NSObject {
 		return applicationShouldTerminateAfterLastWindowClosed;
 	}
 
-	public void setApplicationShouldTerminateAfterLastWindowClosed(boolean applicationShouldTerminateAfterLastWindowClosed) {
+	public void setApplicationShouldTerminateAfterLastWindowClosed(
+			boolean applicationShouldTerminateAfterLastWindowClosed) {
 		this.applicationShouldTerminateAfterLastWindowClosed = applicationShouldTerminateAfterLastWindowClosed;
 	}
 
@@ -123,4 +124,25 @@ public class NSApplication extends NSObject {
 	public void setServicesMenu(NSMenu menu) {
 		nativeHandle.send("setServicesMenu:", menu.getNativeHandle());
 	}
+
+	public void terminate() {
+		nativeHandle.send("terminate:", this);
+	}
+
+	public void hide() {
+		nativeHandle.send("hide:", this);
+	}
+
+	public void unhideAllApplications() {
+		nativeHandle.send("unhideAllApplications:", this);
+	}
+
+	public void hideOtherApplications() {
+		nativeHandle.send("hideOtherApplications:", this);
+	}
+
+	public void newDocument() {
+		nativeHandle.send("newDocument:", this);
+	}
+
 }
