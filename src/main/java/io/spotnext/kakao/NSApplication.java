@@ -13,7 +13,7 @@ public class NSApplication extends NSObject {
 
 	protected NSObject delegate;
 	protected Proxy window;
-	
+
 	protected boolean applicationShouldTerminateAfterLastWindowClosed;
 
 	protected Consumer<Proxy> applicationDidFinishLaunchingListener;
@@ -24,7 +24,7 @@ public class NSApplication extends NSObject {
 		initWithProxy(alloc("NSApplication", "sharedApplication"));
 
 		// setup default menu
-		var mainMenu = NSMenu.createDefaultApplicationMenu();
+		var mainMenu = NSMenu.createDefaultApplicationMenu(this);
 		mainMenu.setAutoenablesItems(true);
 		setMainMenu(mainMenu);
 		setActivationPolicy(ActivationPolicy.regular);
@@ -84,11 +84,11 @@ public class NSApplication extends NSObject {
 	public boolean isApplicationShouldTerminateAfterLastWindowClosed() {
 		return applicationShouldTerminateAfterLastWindowClosed;
 	}
-	
+
 	public void setApplicationShouldTerminateAfterLastWindowClosed(boolean applicationShouldTerminateAfterLastWindowClosed) {
 		this.applicationShouldTerminateAfterLastWindowClosed = applicationShouldTerminateAfterLastWindowClosed;
 	}
-	
+
 	@Msg(selector = "applicationShouldTerminateAfterLastWindowClosed:", signature = "B@:@")
 	public int applicationShouldTerminateAfterLastWindowClosed(Proxy nsApplication) {
 		return applicationShouldTerminateAfterLastWindowClosed ? 1 : 0;
@@ -103,11 +103,11 @@ public class NSApplication extends NSObject {
 
 		setApplicationIconImage(image);
 	}
-	
+
 	public void setApplicationIconImage(NSImage image) {
 		nativeHandle.send("setApplicationIconImage:", image.getNativeHandle());
 	}
-	
+
 	public void activateIgnoringOtherApps(boolean value) {
 		nativeHandle.send("activateIgnoringOtherApps:", value);
 	}
@@ -119,5 +119,8 @@ public class NSApplication extends NSObject {
 	public void setApplicationDidFinishLaunchingListener(Consumer<Proxy> applicationDidFinishLaunchingListener) {
 		this.applicationDidFinishLaunchingListener = applicationDidFinishLaunchingListener;
 	}
-	
+
+	public void setServicesMenu(NSMenu menu) {
+		nativeHandle.send("setServicesMenu:", menu.getNativeHandle());
+	}
 }

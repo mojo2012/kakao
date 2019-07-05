@@ -1,5 +1,6 @@
 package io.spotnext.kakao.ui;
 
+import io.spotnext.kakao.NSApplication;
 import io.spotnext.kakao.NSObject;
 
 public class NSMenu extends NSObject {
@@ -21,7 +22,11 @@ public class NSMenu extends NSObject {
 		nativeHandle.send("addItem:", mainItem.getNativeHandle());
 	}
 
-	public static NSMenu createDefaultApplicationMenu() {
+	private void addItem(String string, String keyEquivalent) {
+		nativeHandle.send("addItemWithTitle:action:keyEquivalent:", string, null, keyEquivalent);
+	}
+
+	public static NSMenu createDefaultApplicationMenu(NSApplication app) {
 		var mainMenu = new NSMenu();
 
 		var mainAppMenuItem = new NSMenuItem("Application"); // `title` really doesn't matter.
@@ -33,7 +38,13 @@ public class NSMenu extends NSObject {
 		mainAppMenuItem.setSubmenu(appMenu);
 
 		var appServicesMenu = new NSMenu();
-//		NSApp.servicesMenu = appServicesMenu;
+		app.setServicesMenu(appServicesMenu);
+
+		appMenu.addItem("About Me", "");
+		appMenu.addItem(NSMenuItem.createSeparator());
+		appMenu.addItem("Preferences...", ",");
+		appMenu.addItem(NSMenuItem.createSeparator());
+		appMenu.addItem("Hide Me", "h");
 
 		return mainMenu;
 	}
