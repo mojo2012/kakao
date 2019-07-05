@@ -24,7 +24,7 @@ public class NSApplication extends NSObject {
 		initWithProxy(alloc("NSApplication", "sharedApplication"));
 
 		// setup default menu
-		var mainMenu = new NSMenu();
+		var mainMenu = NSMenu.createDefaultApplicationMenu();
 		mainMenu.setAutoenablesItems(true);
 		setMainMenu(mainMenu);
 		setActivationPolicy(ActivationPolicy.regular);
