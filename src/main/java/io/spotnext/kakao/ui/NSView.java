@@ -31,9 +31,11 @@ public class NSView extends NSObject {
 	 * Returns a fully initialized instance
 	 */
 	public NSView(String className, NSRect frame) {
-		this(className, false);
+		this(className, frame == null);
 
-		initWithProxy(init(alloc(className, SELECTOR_ALLOC), "initWithFrame:", frame));
+		if (frame != null) {
+			initWithProxy(init(alloc(className, SELECTOR_ALLOC), "initWithFrame:", frame));
+		}
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class NSView extends NSObject {
 	public void setWantsLayer(boolean value) {
 		nativeHandle.send("setWantsLayer:", value);
 	}
-	
+
 	public void setCanDrawSubviewsIntoLayer(boolean value) {
 		nativeHandle.send("setCanDrawSubviewsIntoLayer:", value);
 	}
