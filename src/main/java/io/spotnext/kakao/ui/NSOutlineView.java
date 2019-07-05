@@ -1,6 +1,11 @@
 package io.spotnext.kakao.ui;
 
+import java.util.function.BiConsumer;
+
 import ca.weblite.objc.Proxy;
+import ca.weblite.objc.RuntimeUtils;
+import ca.weblite.objc.annotations.Msg;
+import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
 import io.spotnext.kakao.structs.DataNode;
@@ -13,6 +18,7 @@ public class NSOutlineView extends NSView {
 
 	private NSOutlineViewDataSource dataSource;
 	private NSOutlineViewDelegate delegate;
+	private BiConsumer<NSOutlineView, Long> doubleClickHandler;
 
 	public NSOutlineView(Proxy proxy) {
 		super(proxy);
@@ -21,9 +27,21 @@ public class NSOutlineView extends NSView {
 	public NSOutlineView(NSRect frame) {
 		super("NSOutlineView", frame);
 	}
+	
+	@Override
+	protected void initWithProxy(Proxy proxy) {
+		super.initWithProxy(proxy);
+		
+		setTarget(this);
+		setupDoubleClickAction();
+	}
 
 	public NSOutlineView() {
-		super("NSOutlineView");
+		this((NSRect) null);
+	}
+
+	public void setTarget(NSObject target) {
+		nativeHandle.send("setTarget:", this);
 	}
 
 	public void setDelegate(NSOutlineViewDelegate delegate) {
@@ -97,7 +115,7 @@ public class NSOutlineView extends NSView {
 		return nativeHandle.sendInt("selectedRow");
 	}
 
-	public DataNode getItemAtRow(int rowIndex) {
+	public DataNode getItemAtRow(long rowIndex) {
 		var proxy = nativeHandle.sendProxy("itemAtRow:", rowIndex);
 		var nodeId = proxy.sendString("uid");
 		return dataSource.getNodeByUid(nodeId);
@@ -111,11 +129,47 @@ public class NSOutlineView extends NSView {
 		nativeHandle.send("setFloatsGroupRows:", value);
 	}
 
-	protected void expandItem(DataNode node, boolean expandChildren) {
+	public void expandItem(DataNode node, boolean expandChildren) {
+		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
+	}
+
+	public void expandItem(long node, boolean expandChildren) {
 		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
 	}
 
 	public void expandItem(DataNode node) {
 		expandItem(node, false);
+	}
+
+	public Long getRowForItem(NSObject item) {
+		return (Long) nativeHandle.send("rowForItem:", item);
+	}
+
+	protected void setupDoubleClickAction() {
+		nativeHandle.send("setDoubleAction:", RuntimeUtils.sel("onDoubleClick"));
+	}
+
+	@Msg(selector = "onDoubleClick", signature = "v@:")
+	public void onDoubleClick() {
+		if (doubleClickHandler != null) {
+			doubleClickHandler.accept(this, this.getClickedRow());
+		}
+	}
+
+	public long getClickedRow() {
+		return nativeHandle.sendInt("clickedRow");
+	}
+
+	public long getClickedColumn() {
+		return nativeHandle.sendInt("clickedColumn");
+	}
+
+	public void onDoubleClick(BiConsumer<NSOutlineView, Long> handler) {
+		this.doubleClickHandler = handler;
+	}
+
+	public void expandRow(Long row, boolean expandChildren) {
+		var item = getItemAtRow(row);
+		expandItem(item, expandChildren);
 	}
 }
