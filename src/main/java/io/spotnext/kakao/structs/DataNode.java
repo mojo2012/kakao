@@ -15,6 +15,7 @@ public abstract class DataNode extends NSObject {
 	public DataNode(String title) {
 		this.uid = UUID.randomUUID();
 		this.title = title;
+		registerInstance(getPeer());
 	}
 
 	@Msg(selector = "title", signature = "@@:")

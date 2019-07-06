@@ -2,6 +2,8 @@ package io.spotnext.kakao;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.sun.jna.Pointer;
@@ -17,6 +19,8 @@ import io.spotnext.support.util.ClassUtil;
 
 public abstract class NSObject extends ca.weblite.objc.NSObject {
 
+	private static Map<Pointer, NSObject> INSTANCE_CACHE = new ConcurrentHashMap<>();
+	
 	public static final String SELECTOR_ALLOC = "alloc";
 	public static final String SELECTOR_INIT = "init";
 
@@ -37,7 +41,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	/**
-	 * Pass an already initialized {@link #nativeHandle}
+	 * Pass an already initialized objective-c instance.
 	 * 
 	 * @param proxy the already initialized (eg. alloc/init already done) proxy
 	 *              object
@@ -71,6 +75,16 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		}
 
 		this.nativeHandle = proxy;
+		
+		registerInstance(proxy.getPeer());
+	}
+	
+	protected void registerInstance(Pointer peer) {
+		INSTANCE_CACHE.put(peer, this);
+	}
+
+	public static <T extends NSObject> T getInstance(Pointer pointer) {
+		return (T) INSTANCE_CACHE.get(pointer);
 	}
 
 	@Msg(selector = "handler", signature = "@@:")

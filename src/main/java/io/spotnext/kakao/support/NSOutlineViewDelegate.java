@@ -24,7 +24,7 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 
 	@Msg(selector = "outlineView:viewForTableColumn:item:", signature = "@@:@@@")
 	public Proxy outlineViewViewForTableColumn(Proxy outlineView, Proxy tableColumn, Proxy item) {
-		final var outline = new NSOutlineView(outlineView);
+		final var outline = NSObject.<NSOutlineView>getInstance(outlineView.getPeer());
 		final var view = outline.makeView("view", this);
 
 		var textField = view.getTextField();

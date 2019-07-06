@@ -132,9 +132,9 @@ public class NSOutlineView extends NSView {
 	public void expandItem(DataNode node, boolean expandChildren) {
 		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
 	}
-
-	public void expandItem(long node, boolean expandChildren) {
-		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
+	
+	public void collapseItem(DataNode node) {
+		nativeHandle.send("collapseItem:", node);
 	}
 
 	public void expandItem(DataNode node) {
@@ -168,8 +168,18 @@ public class NSOutlineView extends NSView {
 		this.doubleClickHandler = handler;
 	}
 
-	public void expandRow(Long row, boolean expandChildren) {
+	public void expandRow(long row, boolean expandChildren) {
 		var item = getItemAtRow(row);
 		expandItem(item, expandChildren);
+	}
+	
+	public void collapseRow(long row) {
+		var item = getItemAtRow(row);
+		collapseItem(item);
+	}
+
+	public boolean isRowExpanded(long row) {
+		var item = getItemAtRow(row);
+		return nativeHandle.sendBoolean("isItemExpanded:", item);
 	}
 }

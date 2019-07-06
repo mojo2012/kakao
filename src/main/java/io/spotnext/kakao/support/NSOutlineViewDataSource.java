@@ -19,33 +19,33 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 		if (root.getUid().equals(uid)) {
 			return (T) root;
 		}
-		
+
 		return getSubNodeById(root, uid);
 	}
-	
+
 	private <T extends DataNode> T getSubNodeById(DataGroupNode node, String uid) {
 		T foundNode = null;
-		
+
 		// Object was necessary, as otherwise there was a class cast exception
-		for (Object sn : node.getNodes().toArray()) {
+		for (Object sn : node.getNodes()) {
 			var subNode = (DataNode) sn;
-			
+
 			if (subNode.getUid().equals(uid)) {
 				foundNode = (T) subNode;
 			}
-			
+
 			if (foundNode == null && subNode instanceof DataGroupNode) {
 				foundNode = getSubNodeById((DataGroupNode) subNode, uid);
 			}
-			
+
 			if (foundNode != null) {
 				return foundNode;
 			}
 		}
-		
+
 		return foundNode;
 	}
-	
+
 	/**
 	 * 
 	 * @param outlineView
@@ -54,7 +54,7 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:numberOfChildrenOfItem:", signature = "l@:@@")
 	public int outlineViewNumberOfChildrenOfItem(Proxy outlineView, Proxy item) {
-		return item == null ? root.childCount() : item.sendInt("childCount");
+		return item == null ? root.childCount() : NSObject.<DataNode>getInstance(item.getPeer()).childCount();
 	}
 
 	/**
@@ -66,9 +66,9 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@i@")
 	public Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item) {
-		var node = item != null ? item : root;
+		var node = item != null ? NSObject.<DataGroupNode>getInstance(item.getPeer()) : root;
 
-		return node.sendProxy("children").sendProxy("objectAtIndex:", index);
+		return node.getNodes().objectAtIndex(index);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:isItemExpandable:", signature = "c@:@@")
 	public boolean outlineViewIsItemExpandable(Proxy outlineView, Proxy item) {
-		return item != null ? item.sendInt("childCount") > 0 : false;
+		return item != null ? NSObject.<DataGroupNode>getInstance(item.getPeer()).childCount() > 0 : false;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:objectValueForTableColumn:byItem:", signature = "@@:@@@")
 	public String outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
-		var title = item.send("title").toString();
+		var title = NSObject.<DataGroupNode>getInstance(item.getPeer()).getTitle();
 
 		return title;
 	}
