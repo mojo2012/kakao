@@ -66,9 +66,9 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:child:ofItem:", signature = "@@:@i@")
 	public Proxy outlineViewChildOfItem(Proxy outlineView, int index, Proxy item) {
-		var node = item != null ? NSObject.<DataGroupNode>getInstance(item.getPeer()) : root;
+		var node = item != null ? NSObject.<DataNode>getInstance(item.getPeer()) : root;
 
-		return node.getNodes().objectAtIndex(index);
+		return node instanceof DataGroupNode ? ((DataGroupNode) node).getNodes().objectAtIndex(index) : null;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:isItemExpandable:", signature = "c@:@@")
 	public boolean outlineViewIsItemExpandable(Proxy outlineView, Proxy item) {
-		return item != null ? NSObject.<DataGroupNode>getInstance(item.getPeer()).childCount() > 0 : false;
+		return item != null ? NSObject.<DataNode>getInstance(item.getPeer()).childCount() > 0 : false;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class NSOutlineViewDataSource extends NSObject {
 	 */
 	@Msg(selector = "outlineView:objectValueForTableColumn:byItem:", signature = "@@:@@@")
 	public String outlineViewObjectValueForTableColumnByItem(Proxy outlineView, Proxy tableColumn, Proxy item) {
-		var title = NSObject.<DataGroupNode>getInstance(item.getPeer()).getTitle();
+		var title = NSObject.<DataNode>getInstance(item.getPeer()).getTitle();
 
 		return title;
 	}
