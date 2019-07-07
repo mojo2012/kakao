@@ -1,5 +1,6 @@
 package io.spotnext.kakao.ui;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.function.BiConsumer;
 
 import ca.weblite.objc.Proxy;
@@ -13,6 +14,10 @@ import io.spotnext.kakao.structs.NSTableViewRowSizeStyle;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
 import io.spotnext.kakao.support.NSOutlineViewDataSource;
 import io.spotnext.kakao.support.NSOutlineViewDelegate;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.FixedValue;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.matcher.ElementMatchers;
 
 public class NSOutlineView extends NSView {
 
@@ -27,11 +32,11 @@ public class NSOutlineView extends NSView {
 	public NSOutlineView(NSRect frame) {
 		super("NSOutlineView", frame);
 	}
-	
+
 	@Override
 	protected void initWithProxy(Proxy proxy) {
 		super.initWithProxy(proxy);
-		
+
 		setTarget(this);
 		setupDoubleClickAction();
 	}
@@ -130,11 +135,11 @@ public class NSOutlineView extends NSView {
 	}
 
 	public void expandItem(DataNode node, boolean expandChildren) {
-		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
+		animate(p -> p.send("expandItem:expandChildren:", node, expandChildren));
 	}
-	
+
 	public void collapseItem(DataNode node) {
-		nativeHandle.send("collapseItem:", node);
+		animate(p -> p.send("collapseItem:", node));
 	}
 
 	public void expandItem(DataNode node) {
@@ -172,7 +177,7 @@ public class NSOutlineView extends NSView {
 		var item = getItemAtRow(row);
 		expandItem(item, expandChildren);
 	}
-	
+
 	public void collapseRow(long row) {
 		var item = getItemAtRow(row);
 		collapseItem(item);
@@ -181,5 +186,46 @@ public class NSOutlineView extends NSView {
 	public boolean isRowExpanded(long row) {
 		var item = getItemAtRow(row);
 		return nativeHandle.sendBoolean("isItemExpanded:", item);
+	}
+
+//	public NSOutlineView getAnimator() {
+//		var animatorProxy = nativeHandle.sendProxy("animator");
+
+//		NSOutlineView dynamicType;
+//		try {
+//			dynamicType = new ByteBuddy()
+//					.subclass(NSOutlineView.class)
+//					.method(ElementMatchers.isSuperTypeOf(this.getClass())
+//							.and(ElementMatchers.isSubTypeOf(ca.weblite.objc.NSObject.class))).intercept(MethodDelegation.to(this))
+//					.method(ElementMatchers.named("getNativeHandle")).intercept(FixedValue.value(animatorProxy))
+//					.make()
+//					.load(getClass().getClassLoader())
+//					.getLoaded()
+//					.getDeclaredConstructor().newInstance();
+//		} catch (Exception e) {
+//			throw new IllegalStateException(e);
+//		}
+
+//		var proxiedInstance = (NSOutlineView) java.lang.reflect.Proxy.newProxyInstance(
+//				NSOutlineView.class.getClassLoader(), 
+//				  new Class[] { NSOutlineView.class }, 
+//				  (proxy, method, methodArgs) -> {
+//				    if (method.getName().equals("getNativeHandle")) {
+//				        return animatorProxy;
+//				    } else {
+//				        return method.invoke(this);
+//				    }
+//				});
+
+//		return proxiedInstance;
+//		return dynamicType;
+//		return null;
+//		return new NSOutlineViewAnimator(nativeHandle.sendProxy("animator"));
+//	}
+
+	public static class NSOutlineViewAnimator extends NSOutlineView {
+		public NSOutlineViewAnimator(Proxy proxy) {
+			super(proxy);
+		}
 	}
 }

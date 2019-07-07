@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.sun.jna.Pointer;
@@ -77,6 +78,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		this.nativeHandle = proxy;
 		
 		registerInstance(proxy.getPeer());
+		registerInstance(getPeer());
 	}
 	
 	protected void registerInstance(Pointer peer) {
@@ -180,8 +182,22 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		return this.getClass().getName();
 	}
 	
-	@Msg(selector="getJavaObject", signature="@@:")
-	public Object getJavaObject() {
-		return this;
+	protected Proxy getAnimator() {
+		var animatorProxy = nativeHandle.sendProxy("animator");
+		
+		return animatorProxy;
+	}
+	
+	
+	protected void animate(Consumer<Proxy> consumer) {
+		execute(getAnimator(), consumer);
+	}
+	
+	protected void execute(Consumer<Proxy> consumer) {
+		execute(getNativeHandle(), consumer);
+	}
+	
+	protected void execute(Proxy proxy, Consumer<Proxy> consumer) {
+		consumer.accept(proxy);
 	}
 }
