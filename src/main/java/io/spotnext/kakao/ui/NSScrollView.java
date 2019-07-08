@@ -19,47 +19,47 @@ public class NSScrollView extends NSView {
 	}
 
 	public void setIdentifier(String identifier) {
-		nativeHandle.send("setIdentifier:", identifier);
+		getNativeHandle().send("setIdentifier:", identifier);
 	}
 
 	public String getIdentifier() {
-		return nativeHandle.sendString("getIdentifier");
+		return getNativeHandle().sendString("getIdentifier");
 	}
 
 	public void setVerticalScroller(boolean visible) {
-		nativeHandle.send("setHasVerticalScroller:", visible);
+		getNativeHandle().send("setHasVerticalScroller:", visible);
 	}
 
 	public boolean hasVerticalScroller() {
-		return nativeHandle.getBoolean("hasVerticalScroller");
+		return getNativeHandle().getBoolean("hasVerticalScroller");
 	}
 
 	public void setHorizontalScroller(boolean visible) {
-		nativeHandle.send("setHasHorizontalScroller:", visible);
+		getNativeHandle().send("setHasHorizontalScroller:", visible);
 	}
 
 	public boolean hasHorizontalScroller() {
-		return nativeHandle.getBoolean("hasHorizontalScroller");
+		return getNativeHandle().getBoolean("hasHorizontalScroller");
 	}
 	
 	public void setAutohideScroller(boolean value) {
-		nativeHandle.send("setAutohidesScrollers:", value);
+		getNativeHandle().send("setAutohidesScrollers:", value);
 	}
 
 	public void setContentView(NSClipView clipView) {
 		if (clipView != null) {
-			nativeHandle.set("contentView", clipView.getNativeHandle());
+			getNativeHandle().set("contentView", clipView.getNativeHandle());
 		}
 	}
 
 	public void setDocumentView(NSView view) {
 		if (view != null) {
-			nativeHandle.set("documentView", view.getNativeHandle());
+			getNativeHandle().set("documentView", view.getNativeHandle());
 		}
 	}
 
 	public void setBorderType(NSBorderType value) {
-		nativeHandle.send("setBorderType:", value.id);
+		getNativeHandle().send("setBorderType:", value.id);
 	}
 
 }

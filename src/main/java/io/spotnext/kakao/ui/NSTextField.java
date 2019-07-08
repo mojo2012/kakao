@@ -16,72 +16,72 @@ public class NSTextField extends NSView {
 	}
 
 	public void setBordered(boolean value) {
-		nativeHandle.send("setBordered:", value);
+		getNativeHandle().send("setBordered:", value);
 	}
 
 	public void setText(String text) {
-		nativeHandle.send("setStringValue:", text);
+		getNativeHandle().send("setStringValue:", text);
 	}
 	
 	public String getText() {
-		return nativeHandle.get("stringValue").toString();
+		return getNativeHandle().get("stringValue").toString();
 	}
 
 	public boolean isBordered() {
-		return nativeHandle.getBoolean("isBordered");
+		return getNativeHandle().getBoolean("isBordered");
 	}
 
 	public void setEditable(boolean value) {
-		nativeHandle.send("setEditable:", value);
+		getNativeHandle().send("setEditable:", value);
 	}
 	
 	public boolean isEditable() {
-		return nativeHandle.getBoolean("isBordered");
+		return getNativeHandle().getBoolean("isBordered");
 	}
 
 	public void setBezeled(boolean value) {
-		nativeHandle.send("setBezeled:", value);
+		getNativeHandle().send("setBezeled:", value);
 	}
 
 	public boolean isBezeled() {
-		return nativeHandle.getBoolean("isBezeled");
+		return getNativeHandle().getBoolean("isBezeled");
 	}
 	
 	public void setDrawsBackground(boolean value) {
-		nativeHandle.send("setDrawsBackground:", value);
+		getNativeHandle().send("setDrawsBackground:", value);
 	}
 
 	public void setSelectable(boolean value) {
-		nativeHandle.send("setSelectable:", value);
+		getNativeHandle().send("setSelectable:", value);
 	}
 	
 	public boolean isSelectable() {
-		return nativeHandle.getBoolean("isSelectable");
+		return getNativeHandle().getBoolean("isSelectable");
 	}
 	
 	
 	public int getMaximumNumberOfLines() {
-		return nativeHandle.sendInt("getMaximumNumberOfLines");
+		return getNativeHandle().sendInt("getMaximumNumberOfLines");
 	}
 	
 	public void setMaximumNumberOfLines(int value) {
-		nativeHandle.send("setMaximumNumberOfLines:", value);
+		getNativeHandle().send("setMaximumNumberOfLines:", value);
 	}
 
 	public void setFont(NSFont font) {
-		nativeHandle.send("setFont:", font.getNativeHandle());
+		getNativeHandle().send("setFont:", font.getNativeHandle());
 	}
 	
 	public void setLineBreakMode(NSLineBreakMode mode) {
-		nativeHandle.sendProxy("cell").sendProxy("setLineBreakMode:", mode.id);
+		getNativeHandle().sendProxy("cell").sendProxy("setLineBreakMode:", mode.id);
 	}
 	
 	public void setTruncatesLastVisibleLine(boolean value) {
-		nativeHandle.sendProxy("cell").send("setTruncatesLastVisibleLine:", value);
+		getNativeHandle().sendProxy("cell").send("setTruncatesLastVisibleLine:", value);
 	}
 
 	public void setWraps(boolean value) {
-		nativeHandle.sendProxy("cell").send("setWraps:", value);		
+		getNativeHandle().sendProxy("cell").send("setWraps:", value);		
 	}
 	
 //	iew!.cell?.lineBreakMode = .byTruncatingTail

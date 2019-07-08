@@ -10,7 +10,7 @@ public class NSMutableArray<T> extends NSArray<T> {
 	public NSMutableArray(Class<T> elementType) {
 		super("NSMutableArray", false, elementType);
 
-		initWithProxy(init(alloc(nativeClassName, SELECTOR_ALLOC), SELECTOR_INIT));
+		initWithProxy(init(alloc(getNativeClassName(), SELECTOR_ALLOC), SELECTOR_INIT));
 	}
 
 //	public NSMutableArray(Proxy proxy, Class<T> elementType) {
@@ -27,7 +27,7 @@ public class NSMutableArray<T> extends NSArray<T> {
 			elements.addAll(Arrays.asList(objects));
 			
 			for (var o : objects) {
-				nativeHandle.send("addObject:", o);
+				getNativeHandle().send("addObject:", o);
 			}
 		}
 	}
@@ -38,7 +38,7 @@ public class NSMutableArray<T> extends NSArray<T> {
 //			elements.addAll(Arrays.asList(objects));
 //		}
 		
-		nativeHandle.send("addObject:", nsArray);
+		getNativeHandle().send("addObject:", nsArray);
 	}
 	
 	public void addObjects(List<T> objects) {
@@ -48,11 +48,11 @@ public class NSMutableArray<T> extends NSArray<T> {
 	@Msg(selector = "removeObject:", signature = "v@:@")
 	public void removeObject(T object) {
 		elements.remove(object);
-		nativeHandle.send("removeObject:", object);
+		getNativeHandle().send("removeObject:", object);
 	}
 
 //	public NSArray<T> copy() {
-//		var proxy = nativeHandle.sendProxy("copy");
+//		var proxy = getNativeHandle().sendProxy("copy");
 //
 //		return new NSArray<T>(proxy, elementType);
 //	}

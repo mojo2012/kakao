@@ -29,8 +29,8 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	public static final String SELECTOR_ALLOC = "alloc";
 	public static final String SELECTOR_INIT = "init";
 
-	protected String nativeClassName;
-	protected Proxy nativeHandle;
+	private String nativeClassName;
+	private Proxy nativeHandle;
 
 	protected NSObject() {
 		this("NSObject", true);
@@ -48,8 +48,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	/**
 	 * Pass an already initialized objective-c instance.
 	 * 
-	 * @param proxy the already initialized (eg. alloc/init already done) proxy
-	 *              object
+	 * @param proxy the already initialized (eg. alloc/init already done) proxy object
 	 */
 	protected NSObject(Proxy proxy) {
 		super("NSObject");
@@ -103,29 +102,29 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	public void release() {
-		nativeHandle.send("release");
+		getNativeHandle().send("release");
 	}
 
 	public int retainCount() {
-		return nativeHandle.sendInt("retainCount");
+		return getNativeHandle().sendInt("retainCount");
 	}
 
 	public boolean isKindOfClass(String className) {
 		var objCClassPointer = RuntimeUtils.cls(className);
-		return nativeHandle.sendBoolean("isKindOfClass", objCClassPointer);
+		return getNativeHandle().sendBoolean("isKindOfClass", objCClassPointer);
 	}
 
 	public boolean isKindOfClass(NSObject object) {
-		var objPointer = object.nativeHandle.getPeer();
-		return nativeHandle.sendBoolean("isKindOfClass", objPointer);
+		var objPointer = object.getNativeHandle().getPeer();
+		return getNativeHandle().sendBoolean("isKindOfClass", objPointer);
 	}
 
 //	public String description() {
-//		return nativeHandle.sendString("description");
+//		return getNativeHandle().sendString("description");
 //	}
 
 	public <T extends NSObject> T copy() {
-		var copiedProxy = nativeHandle.sendProxy("copyWithZone", new Object[0]);
+		var copiedProxy = getNativeHandle().sendProxy("copyWithZone", new Object[0]);
 		return (T) constructElementWrapper(copiedProxy, this.getClass());
 	}
 
@@ -143,7 +142,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		var opts = options != null ? options.stream().map(NSBindingOption::name).collect(Collectors.toList()).toArray()
 				: null;
 
-		nativeHandle.send("bind:toObject:withKeyPath:options:", bindingName.id, observable, keyPath, opts);
+		getNativeHandle().send("bind:toObject:withKeyPath:options:", bindingName.id, observable, keyPath, opts);
 	}
 
 	@Msg(selector = "keyPathsForValuesAffectingValueForKey:", signature = "@@:@")
@@ -152,10 +151,8 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	/**
-	 * Gets the value for the given property. If the value is an {@link NSObject}
-	 * then its native handle (using {@link #getNativeHandle()}) will be returned
-	 * instead of the actual object. If this behavior is not desired, the method
-	 * must be overridden.
+	 * Gets the value for the given property. If the value is an {@link NSObject} then its native handle (using {@link #getNativeHandle()}) will be returned
+	 * instead of the actual object. If this behavior is not desired, the method must be overridden.
 	 * 
 	 * @param key property
 	 * @return
@@ -187,66 +184,13 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	protected Proxy getAnimatorProxy() {
-		var animatorProxy = nativeHandle.sendProxy("animator");
+		var animatorProxy = getNativeHandle().sendProxy("animator");
 
 		return animatorProxy;
 	}
 
-	public <T extends NSObject> T getAnimator() {
-		var animatorProxy = nativeHandle.sendProxy("animator");
-
-//		T animator;
-//		try {
-//			animator = (T) new ByteBuddy().subclass(this.getClass())
-//				.method(ElementMatchers.any()
-//						.and(ElementMatchers.not(ElementMatchers.named("clone"))))
-//					.intercept(MethodDelegation.to(MethodInterceptor.class))
-//				.method(ElementMatchers.named("getNativeHandle"))
-//					.intercept(FixedValue.value(getAnimatorProxy()))
-//				.make()
-//				.load(MethodInterceptor.class.getClassLoader())
-//				.getLoaded()
-//				.getConstructor(Object.class)
-//				.newInstance(this);
-//		} catch (Exception  e) {
-//			throw new IllegalStateException(e);
-//		}
-
-		ProxyFactory f = new ProxyFactory();
-		f.setSuperclass(this.getClass());
-		f.setFilter(new MethodFilter() {
-			@Override
-			public boolean isHandled(Method m) {
-//				if (!m.getName().equals("clone")
-				return true;
-			}
-		});
-
-		final var realObject = this;
-		
-		Object animator = null;
-		try {
-			animator = f.create(new Class[0], new Object[0]);
-			var mi = new MethodHandler() {
-				public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
-					if (m.getName().contentEquals("getNativeHandle")) {
-						return animatorProxy;
-					}
-					
-					return proceed.invoke(realObject, args);
-				}
-			};
-
-			((javassist.util.proxy.Proxy) animator).setHandler(mi);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return (T) animator;
-	}
-
 	protected void animate(Consumer<Proxy> consumer) {
-		execute(getAnimator(), consumer);
+		execute(getAnimatorProxy(), consumer);
 	}
 
 	protected void execute(Consumer<Proxy> consumer) {

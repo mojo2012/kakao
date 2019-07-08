@@ -9,7 +9,7 @@ public class NSWorkspace extends NSObject {
 	protected NSWorkspace() {
 		super("NSWorkspace", false);
 
-		initWithProxy(alloc(nativeClassName, "sharedWorkspace"));
+		initWithProxy(alloc(getNativeClassName(), "sharedWorkspace"));
 	}
 
 	public static NSWorkspace shared() {
@@ -17,12 +17,12 @@ public class NSWorkspace extends NSObject {
 	}
 
 	public NSImage getIconForFile(String file) {
-		var proxy = nativeHandle.sendProxy("iconForFile:", file);
+		var proxy = getNativeHandle().sendProxy("iconForFile:", file);
 		return new NSImage(proxy);
 	}
 
 	public NSImage getIconForFileType(String fileType) {
-		var proxy = nativeHandle.sendProxy("iconForFileType:", fileType);
+		var proxy = getNativeHandle().sendProxy("iconForFileType:", fileType);
 		return new NSImage(proxy);
 	}
 }

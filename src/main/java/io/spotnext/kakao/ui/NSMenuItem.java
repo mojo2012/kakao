@@ -20,7 +20,7 @@ public class NSMenuItem extends NSObject {
 
 		this.onMenuSelected(handler);
 
-		initWithProxy(init(alloc(nativeClassName, SELECTOR_ALLOC), "initWithTitle:action:keyEquivalent:", title,
+		initWithProxy(init(alloc(getNativeClassName(), SELECTOR_ALLOC), "initWithTitle:action:keyEquivalent:", title,
 				RuntimeUtils.sel("menuSelected"), keyEquivalent));
 
 		setTarget(this);
@@ -33,11 +33,11 @@ public class NSMenuItem extends NSObject {
 	protected NSMenuItem(boolean separator) {
 		super("NSMenuItem", false);
 
-		initWithProxy(alloc(nativeClassName, "separatorItem"));
+		initWithProxy(alloc(getNativeClassName(), "separatorItem"));
 	}
 
 	public void setSubmenu(NSMenu menu) {
-		nativeHandle.send("setSubmenu:", menu.getNativeHandle());
+		getNativeHandle().send("setSubmenu:", menu.getNativeHandle());
 	}
 
 	public static NSMenuItem createSeparator() {
@@ -56,6 +56,6 @@ public class NSMenuItem extends NSObject {
 	}
 
 	protected void setTarget(NSObject target) {
-		nativeHandle.send("setTarget:", this);
+		getNativeHandle().send("setTarget:", this);
 	}
 }

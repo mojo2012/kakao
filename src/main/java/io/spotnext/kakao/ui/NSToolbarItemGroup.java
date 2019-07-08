@@ -25,7 +25,7 @@ public class NSToolbarItemGroup extends NSToolbarItem {
 			var array = new NSMutableArray<>(Proxy.class);
 			array.addObjects(nativeHandles);
 
-			nativeHandle.send("setSubitems:", array.getNativeHandle().sendProxy("copy"));
+			getNativeHandle().send("setSubitems:", array.getNativeHandle().sendProxy("copy"));
 
 			for (var item : items) {
 				item.setMinSize(new NSSize(40, 40));

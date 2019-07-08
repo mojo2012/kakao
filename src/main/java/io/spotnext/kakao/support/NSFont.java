@@ -6,6 +6,6 @@ public class NSFont extends NSObject {
 	public NSFont(String fontName, double fontSize) {
 		super("NSFont", false);
 		
-		initWithProxy(alloc(nativeClassName, "fontWithName:size:", fontName, fontSize));
+		initWithProxy(alloc(getNativeClassName(), "fontWithName:size:", fontName, fontSize));
 	}
 }

@@ -31,11 +31,11 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setActivationPolicy(ActivationPolicy value) {
-		nativeHandle.send("setActivationPolicy:", value.id);
+		getNativeHandle().send("setActivationPolicy:", value.id);
 	}
 
 	public void setMainMenu(NSMenu mainMenu) {
-		nativeHandle.send("setMainMenu:", mainMenu.getNativeHandle());
+		getNativeHandle().send("setMainMenu:", mainMenu.getNativeHandle());
 	}
 
 	public static NSApplication sharedApplication() {
@@ -77,8 +77,8 @@ public class NSApplication extends NSObject {
 	}
 
 	public void run() {
-		nativeHandle.send("setDelegate:", delegate != null ? delegate : this);
-		nativeHandle.send("run");
+		getNativeHandle().send("setDelegate:", delegate != null ? delegate : this);
+		getNativeHandle().send("run");
 	}
 
 	public boolean isApplicationShouldTerminateAfterLastWindowClosed() {
@@ -106,11 +106,11 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setApplicationIconImage(NSImage image) {
-		nativeHandle.send("setApplicationIconImage:", image.getNativeHandle());
+		getNativeHandle().send("setApplicationIconImage:", image.getNativeHandle());
 	}
 
 	public void activateIgnoringOtherApps(boolean value) {
-		nativeHandle.send("activateIgnoringOtherApps:", value);
+		getNativeHandle().send("activateIgnoringOtherApps:", value);
 	}
 
 	public Consumer<Proxy> getApplicationDidFinishLaunchingListener() {
@@ -122,27 +122,27 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setServicesMenu(NSMenu menu) {
-		nativeHandle.send("setServicesMenu:", menu.getNativeHandle());
+		getNativeHandle().send("setServicesMenu:", menu.getNativeHandle());
 	}
 
 	public void terminate() {
-		nativeHandle.send("terminate:", this);
+		getNativeHandle().send("terminate:", this);
 	}
 
 	public void hide() {
-		nativeHandle.send("hide:", this);
+		getNativeHandle().send("hide:", this);
 	}
 
 	public void unhideAllApplications() {
-		nativeHandle.send("unhideAllApplications:", this);
+		getNativeHandle().send("unhideAllApplications:", this);
 	}
 
 	public void hideOtherApplications() {
-		nativeHandle.send("hideOtherApplications:", this);
+		getNativeHandle().send("hideOtherApplications:", this);
 	}
 
 	public void newDocument() {
-		nativeHandle.send("newDocument:", this);
+		getNativeHandle().send("newDocument:", this);
 	}
 
 }

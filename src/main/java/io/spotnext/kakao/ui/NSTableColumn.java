@@ -6,52 +6,53 @@ public class NSTableColumn extends NSObject {
 	public NSTableColumn(String identifier) {
 		super("NSTableColumn", false);
 
-		nativeHandle = init(alloc(nativeClassName, SELECTOR_ALLOC), "initWithIdentifier:", identifier);
+		var proxy = init(alloc(getNativeClassName(), SELECTOR_ALLOC), "initWithIdentifier:", identifier);
+		initWithProxy(proxy);
 	}
 
 	public void setEditable(boolean value) {
-		nativeHandle.send("setEditable:", value);
+		getNativeHandle().send("setEditable:", value);
 	}
 
 	public boolean isEditable() {
-		return nativeHandle.sendBoolean("editable");
+		return getNativeHandle().sendBoolean("editable");
 	}
 	
 	public void setHidden(boolean value) {
-		nativeHandle.send("setHidden:", value);
+		getNativeHandle().send("setHidden:", value);
 	}
 
 	public boolean isHidden() {
-		return nativeHandle.sendBoolean("hidden");
+		return getNativeHandle().sendBoolean("hidden");
 	}
 	
 	
 	public void setResizable(boolean value) {
-		nativeHandle.send("setResizable:", value);
+		getNativeHandle().send("setResizable:", value);
 	}
 
 	public boolean isResizable() {
-		return nativeHandle.sendBoolean("isResizable");
+		return getNativeHandle().sendBoolean("isResizable");
 	}
 
 
 	public NSTableHeaderCell getHeaderCell() {
-		var proxy = nativeHandle.sendProxy("headerCell");
+		var proxy = getNativeHandle().sendProxy("headerCell");
 
 		return new NSTableHeaderCell(proxy);
 	}
 
 	public void setTitle(String value) {
-		nativeHandle.send("setTitle:", value);
+		getNativeHandle().send("setTitle:", value);
 	}
 
 	public String getTitle() {
-		return nativeHandle.sendString("title");
+		return getNativeHandle().sendString("title");
 	}
 	
 
 	public double getWidth() {
-		return nativeHandle.getDouble("width");
+		return getNativeHandle().getDouble("width");
 	}
 
 }

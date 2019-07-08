@@ -48,41 +48,41 @@ public class NSView extends NSObject {
 	}
 
 	public void setFrameSize(NSSize size) {
-		nativeHandle.send("setFrameSize:", size);
+		getNativeHandle().send("setFrameSize:", size);
 	}
 
 	public NSRect contentViewFrame() {
-		var desc = nativeHandle.getProxy("contentView").getProxy("bounds").toString();
+		var desc = getNativeHandle().getProxy("contentView").getProxy("bounds").toString();
 		return NSRect.parse(desc);
 	}
 
 	public NSRect frame() {
-		var pointer = nativeHandle.getProxy("frame").getPeer();
+		var pointer = getNativeHandle().getProxy("frame").getPeer();
 		return new NSRect(pointer).copy();
 	}
 
 	public void addSubview(NSView view) {
-		nativeHandle.send("addSubview:", view.nativeHandle);
+		getNativeHandle().send("addSubview:", view.getNativeHandle());
 	}
 
 	public void setFocusRingType(NSFocusRingType value) {
-		nativeHandle.send("setFocusRingType:", value.id);
+		getNativeHandle().send("setFocusRingType:", value.id);
 	}
 
 	public void wantsLayer(boolean visible) {
-		nativeHandle.set("wantsLayer", visible);
+		getNativeHandle().set("wantsLayer", visible);
 	}
 
 	public boolean wantsLayer() {
-		return nativeHandle.getBoolean("wantsLayer");
+		return getNativeHandle().getBoolean("wantsLayer");
 	}
 
 	public void setAutoresizesSubviews(boolean value) {
-		nativeHandle.send("setAutoresizesSubviews:", value);
+		getNativeHandle().send("setAutoresizesSubviews:", value);
 	}
 
 	public boolean isAutoresizesSubviews() {
-		return nativeHandle.getBoolean("autoresizesSubviews");
+		return getNativeHandle().getBoolean("autoresizesSubviews");
 	}
 
 	public void setAutoresizingMask(NSAutoresizingMaskOptions... values) {
@@ -94,19 +94,19 @@ public class NSView extends NSObject {
 			}
 		}
 
-		nativeHandle.send("setAutoresizingMask:", mask);
+		getNativeHandle().send("setAutoresizingMask:", mask);
 	}
 //
 //	public void setBackgroundColor(String string) {
-//		var layerProxy = nativeHandle.sendProxy("layer");
+//		var layerProxy = getNativeHandle().sendProxy("layer");
 //		layerProxy.send("setBackgroundColor:", )
 //	}
 
 	public void setWantsLayer(boolean value) {
-		nativeHandle.send("setWantsLayer:", value);
+		getNativeHandle().send("setWantsLayer:", value);
 	}
 
 	public void setCanDrawSubviewsIntoLayer(boolean value) {
-		nativeHandle.send("setCanDrawSubviewsIntoLayer:", value);
+		getNativeHandle().send("setCanDrawSubviewsIntoLayer:", value);
 	}
 }

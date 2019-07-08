@@ -14,23 +14,23 @@ public class NSSegmentedControl extends NSView {
 //	segmentedControlWithLabels:trackingMode:target:action:
 
 	public void setSegmentCount(int count) {
-		nativeHandle.send("setSegmentCount:", count);
+		getNativeHandle().send("setSegmentCount:", count);
 	}
 
 	public int getSegmentCount(int count) {
-		return nativeHandle.sendInt("getSegmentCount");
+		return getNativeHandle().sendInt("getSegmentCount");
 	}
 
 	public void setLabel(String label, int segmentIndex) {
-		nativeHandle.send("setLabel:forSegment:", label, segmentIndex);
+		getNativeHandle().send("setLabel:forSegment:", label, segmentIndex);
 	}
 
 	public String getLabel(int segmentIndex) {
-		return nativeHandle.sendString("labelForSegment", segmentIndex);
+		return getNativeHandle().sendString("labelForSegment", segmentIndex);
 	}
 
 	public void setSelected(int segmentIndex) {
-		nativeHandle.send("setSelected:forSegment:", true, segmentIndex);
+		getNativeHandle().send("setSelected:forSegment:", true, segmentIndex);
 	}
 
 	/**
@@ -39,10 +39,10 @@ public class NSSegmentedControl extends NSView {
 	 * @param value
 	 */
 	public void setDistribution(NSSegmentDistribution value) {
-		nativeHandle.send("setSegmentDistribution:", value.id);
+		getNativeHandle().send("setSegmentDistribution:", value.id);
 	}
 
 	public void setSegmentStyle(NSSegmentStyle value) {
-		nativeHandle.send("setSegmentStyle:", value.id);
+		getNativeHandle().send("setSegmentStyle:", value.id);
 	}
 }

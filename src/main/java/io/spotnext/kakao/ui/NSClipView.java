@@ -13,6 +13,6 @@ public class NSClipView extends NSView {
 	}
 
 	public void setDocumentView(NSView view) {
-		nativeHandle.set("documentView", view.getNativeHandle());
+		getNativeHandle().set("documentView", view.getNativeHandle());
 	}
 }

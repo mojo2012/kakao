@@ -8,19 +8,19 @@ public class NSTextView extends NSView {
 
 
 	public boolean isVerticallyResizable() {
-		return nativeHandle.sendBoolean("isVerticallyResizable");
+		return getNativeHandle().sendBoolean("isVerticallyResizable");
 	}
 
 	public void setVerticallyResizable(boolean value) {
-		nativeHandle.send("setVerticallyResizable:", value);
+		getNativeHandle().send("setVerticallyResizable:", value);
 	}
 
 	public boolean isHorizontallyResizable() {
-		return nativeHandle.sendBoolean("isHorizontallyResizable");
+		return getNativeHandle().sendBoolean("isHorizontallyResizable");
 	}
 
 	public void setHorizontallyResizable(boolean value) {
-		nativeHandle.send("setHorizontallyResizable:", value);
+		getNativeHandle().send("setHorizontallyResizable:", value);
 	}
 
 	public NSTextView(Proxy proxy) {
@@ -32,23 +32,23 @@ public class NSTextView extends NSView {
 	}
 
 	public boolean isEditable() {
-		return nativeHandle.getBoolean("isEditable");
+		return getNativeHandle().getBoolean("isEditable");
 	}
 
 	public void setEditable(boolean value) {
-		nativeHandle.send("setEditable:", value);
+		getNativeHandle().send("setEditable:", value);
 	}
 
 	public void setText(String value) {
-		nativeHandle.send("setString:", value);
+		getNativeHandle().send("setString:", value);
 	}
 
 	public String getText() {
-		return nativeHandle.sendString("string");
+		return getNativeHandle().sendString("string");
 	}
 
 	public void setFont(NSFont font) {
-		nativeHandle.send("setFont:", font.getNativeHandle());
+		getNativeHandle().send("setFont:", font.getNativeHandle());
 	}
 
 }

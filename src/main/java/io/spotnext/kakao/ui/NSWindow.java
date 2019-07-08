@@ -36,7 +36,7 @@ public class NSWindow extends NSView {
 			}
 		}
 
-		initWithProxy(initWithRect(alloc(nativeClassName, SELECTOR_ALLOC), frame, style, backing, defer));
+		initWithProxy(initWithRect(alloc(getNativeClassName(), SELECTOR_ALLOC), frame, style, backing, defer));
 	}
 
 	public NSWindow(NSRect frame) {
@@ -46,13 +46,13 @@ public class NSWindow extends NSView {
 	public NSWindow() {
 		super("NSWindow", false);
 
-		initWithProxy(initWithDefaults(alloc(nativeClassName, SELECTOR_ALLOC)));
+		initWithProxy(initWithDefaults(alloc(getNativeClassName(), SELECTOR_ALLOC)));
 	}
 
 	public NSWindow(NSObject contentViewController) {
 		super("NSWindow", false);
 
-		initWithProxy(alloc(nativeClassName, "windowWithContentViewController:", contentViewController));
+		initWithProxy(alloc(getNativeClassName(), "windowWithContentViewController:", contentViewController));
 	}
 
 	protected Proxy initWithDefaults(Proxy proxy) {
@@ -65,31 +65,31 @@ public class NSWindow extends NSView {
 	}
 
 	public void setTitleVisibility(NSWindowTitleVisibility value) {
-		nativeHandle.send("setTitleVisibility:", value.getCode());
+		getNativeHandle().send("setTitleVisibility:", value.getCode());
 	}
 
 	public void setTitlebarAppearsTransparent(boolean value) {
-		nativeHandle.send("setTitleVisibility:", value);
+		getNativeHandle().send("setTitleVisibility:", value);
 	}
 
 	public void setTitle(String title) {
-		nativeHandle.send("setTitle:", title);
+		getNativeHandle().send("setTitle:", title);
 	}
 
 	public void makeKeyAndOrderFront(NSObject sender) {
-		nativeHandle.send("makeKeyAndOrderFront:", sender);
+		getNativeHandle().send("makeKeyAndOrderFront:", sender);
 	}
 
 	public void orderFrontRegardless() {
-		nativeHandle.send("orderFrontRegardless");
+		getNativeHandle().send("orderFrontRegardless");
 	}
 
 	public void center() {
-		nativeHandle.send("center");
+		getNativeHandle().send("center");
 	}
 
 	public void setToolbar(NSToolbar toolbar) {
-		nativeHandle.send("setToolbar:", toolbar.getNativeHandle());
+		getNativeHandle().send("setToolbar:", toolbar.getNativeHandle());
 	}
 
 	public NSView contentView() {
@@ -99,11 +99,11 @@ public class NSWindow extends NSView {
 	}
 
 	protected Proxy contentViewInternal() {
-		return nativeHandle.sendProxy("contentView");
+		return getNativeHandle().sendProxy("contentView");
 	}
 
 	public NSRect frame() {
-		var pointer = nativeHandle.sendProxy("frame").getPeer();
+		var pointer = getNativeHandle().sendProxy("frame").getPeer();
 		return new NSRect(pointer).copy();
 	}
 
@@ -113,12 +113,12 @@ public class NSWindow extends NSView {
 	}
 
 	public void setMinSize(NSSize size) {
-		nativeHandle.send("setMinSize:", size);
+		getNativeHandle().send("setMinSize:", size);
 	}
 
 	public void setContentView(NSView clipView) {
 		if (clipView != null) {
-			nativeHandle.set("contentView", clipView.getNativeHandle());
+			getNativeHandle().set("contentView", clipView.getNativeHandle());
 		}
 	}
 }

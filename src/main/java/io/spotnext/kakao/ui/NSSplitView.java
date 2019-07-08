@@ -16,47 +16,47 @@ public class NSSplitView extends NSView {
 	}
 
 	public void adjustSubviews() {
-		nativeHandle.send("adjustSubviews");
+		getNativeHandle().send("adjustSubviews");
 	}
 
 	public void arrangedSubviews() {
-		nativeHandle.send("arrangedSubviews");
+		getNativeHandle().send("arrangedSubviews");
 	}
 
 	public void arrangesAllSubviews() {
-		nativeHandle.send("arrangesAllSubviews");
+		getNativeHandle().send("arrangesAllSubviews");
 	}
 
 	public void setOrientation(Orientation value) {
 		if (Orientation.Vertical.equals(value)) {
-			nativeHandle.send("setVertical:", 1);
+			getNativeHandle().send("setVertical:", 1);
 		} else {
-			nativeHandle.send("setVertical:", 0);
+			getNativeHandle().send("setVertical:", 0);
 		}
 	}
 
 	public Orientation getOrientation() {
-		var isVertical = nativeHandle.sendBoolean("isVertical");
+		var isVertical = getNativeHandle().sendBoolean("isVertical");
 
 		return isVertical ? Orientation.Vertical : Orientation.Horizontal;
 	}
 
 	public void setDividerStyle(NSSplitViewDividerStyle value) {
-		nativeHandle.send("setDividerStyle:", value.id);
+		getNativeHandle().send("setDividerStyle:", value.id);
 	}
 
 	public NSSplitViewDividerStyle getDividerStyle() {
-		var id = nativeHandle.sendRaw("dividerStyle");
+		var id = getNativeHandle().sendRaw("dividerStyle");
 
 		return NSSplitViewDividerStyle.fromId((long) id).get();
 	}
 
 	public void setPosition(double value, int dividerIndex) {
-		nativeHandle.send("setPosition:ofDividerAtIndex:", new CGFloat(value), dividerIndex);
+		getNativeHandle().send("setPosition:ofDividerAtIndex:", new CGFloat(value), dividerIndex);
 	}
 
 	public void setHoldingPriorityForSubview(double priority, int subviewIndex) {
-		nativeHandle.send("setHoldingPriority:forSubviewAtIndex:", priority, subviewIndex);
+		getNativeHandle().send("setHoldingPriority:forSubviewAtIndex:", priority, subviewIndex);
 	}
 
 }

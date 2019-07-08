@@ -15,19 +15,19 @@ public class NSImageView extends NSView {
 	}
 
 	public boolean isEditable() {
-		return nativeHandle.getBoolean("isEditable");
+		return getNativeHandle().getBoolean("isEditable");
 	}
 
 	public void setEditable(boolean value) {
-		nativeHandle.send("setEditable:", value);
+		getNativeHandle().send("setEditable:", value);
 	}
 
 	public NSImage getImage() {
-		var proxy = nativeHandle.sendProxy("getImage");
+		var proxy = getNativeHandle().sendProxy("getImage");
 		return new NSImage(proxy);
 	}
 	
 	public void setImage(NSImage image) {
-		nativeHandle.send("setImage:", image.getNativeHandle());
+		getNativeHandle().send("setImage:", image.getNativeHandle());
 	}
 }

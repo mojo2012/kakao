@@ -54,7 +54,7 @@ public class NSToolbarItem extends NSObject {
 	}
 
 	public String getIdentifier() {
-		var id = nativeHandle.send("itemIdentifier");
+		var id = getNativeHandle().send("itemIdentifier");
 
 		// NSString is returned, coarsing is not working?
 		if (id instanceof Proxy) {
@@ -69,27 +69,27 @@ public class NSToolbarItem extends NSObject {
 	}
 
 	public void setLabel(String value) {
-		nativeHandle.send("setLabel:", new NSString(value).getNativeHandle());
+		getNativeHandle().send("setLabel:", new NSString(value).getNativeHandle());
 	}
 
 	public void setToolTip(String value) {
-		nativeHandle.send("setToolTip:", value);
+		getNativeHandle().send("setToolTip:", value);
 	}
 
 	public void setTag(int value) {
-		nativeHandle.send("setTag:", value);
+		getNativeHandle().send("setTag:", value);
 	}
 
 	public void paletteLabel(String value) {
-		nativeHandle.send("setPaletteLabel:", value);
+		getNativeHandle().send("setPaletteLabel:", value);
 	}
 
 	public void setEnabled(boolean value) {
-		nativeHandle.send("setEnabled:", value);
+		getNativeHandle().send("setEnabled:", value);
 	}
 
 	public void setImage(NSImage image) {
-		nativeHandle.send("setImage:", image.getNativeHandle());
+		getNativeHandle().send("setImage:", image.getNativeHandle());
 	}
 
 	public void setView(NSView view) {
@@ -98,30 +98,30 @@ public class NSToolbarItem extends NSObject {
 			((NSButton) view).setBezelSstyle(NSBezelStyle.TexturedRounded);
 		}
 
-		nativeHandle.send("setView:", view.getNativeHandle());
+		getNativeHandle().send("setView:", view.getNativeHandle());
 	}
 
 	public void setMinSize(NSSize size) {
-		nativeHandle.send("setMinSize:", size);
+		getNativeHandle().send("setMinSize:", size);
 	}
 
 	public void setMaxSize(NSSize size) {
-		nativeHandle.send("setMaxSize:", size);
+		getNativeHandle().send("setMaxSize:", size);
 	}
 
 	public boolean allowsDuplicatesInToolbar() {
-		return nativeHandle.sendBoolean("allowsDuplicatesInToolbar");
+		return getNativeHandle().sendBoolean("allowsDuplicatesInToolbar");
 	}
 
 	public void setTarget(NSObject eventReceiver) {
-		nativeHandle.send("setTarget:", eventReceiver);
+		getNativeHandle().send("setTarget:", eventReceiver);
 	}
 
 	public void setAction(Consumer<NSToolbarItem> listener) {
 		this.actionListener = listener;
 
 		setTarget(this);
-		nativeHandle.send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
+		getNativeHandle().send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
 	}
 
 	/*

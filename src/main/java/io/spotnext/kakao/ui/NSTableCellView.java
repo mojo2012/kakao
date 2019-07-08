@@ -19,15 +19,15 @@ public class NSTableCellView extends NSView {
 	}
 
 	public void setTextField(NSTextField textField) {
-		nativeHandle.send("setTextField:", textField.getNativeHandle());
+		getNativeHandle().send("setTextField:", textField.getNativeHandle());
 	}
 
 	public void setImageView(NSImageView imageView) {
-		nativeHandle.send("setImageView:", imageView.getNativeHandle());
+		getNativeHandle().send("setImageView:", imageView.getNativeHandle());
 	}
 
 	public NSTextField getTextField() {
-		final var proxy = nativeHandle.getProxy("textField");
+		final var proxy = getNativeHandle().getProxy("textField");
 		NSTextField textField = null;
 
 		if (proxy == null) {
@@ -47,7 +47,7 @@ public class NSTableCellView extends NSView {
 	}
 
 	public NSImageView getImageView() {
-		final var proxy = nativeHandle.getProxy("imageView");
+		final var proxy = getNativeHandle().getProxy("imageView");
 		NSImageView imageView = null;
 
 		if (proxy == null) {

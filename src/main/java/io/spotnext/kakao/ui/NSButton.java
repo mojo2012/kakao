@@ -54,7 +54,7 @@ public class NSButton extends NSView {
 		arguments.add(this);
 		arguments.add(RuntimeUtils.sel("onAction:"));
 
-		var proxy = alloc(nativeClassName, selector, arguments.toArray());
+		var proxy = alloc(getNativeClassName(), selector, arguments.toArray());
 		initWithProxy(proxy);
 
 //		setButtonType(NSButtonType.MomentaryPushIn);
@@ -62,29 +62,29 @@ public class NSButton extends NSView {
 	}
 
 	public void setTitle(String value) {
-		nativeHandle.send("setTitle:", new NSString(value).getNativeHandle());
+		getNativeHandle().send("setTitle:", new NSString(value).getNativeHandle());
 	}
 
 	public String getTitle() {
-		return nativeHandle.send("title:").toString();
+		return getNativeHandle().send("title:").toString();
 	}
 
 	public void setImageName(NSImageName value) {
-		nativeHandle.send("setImage:", new NSImage(value).getNativeHandle());
+		getNativeHandle().send("setImage:", new NSImage(value).getNativeHandle());
 	}
 
 	public NSImage getImageName() {
-		var proxy = nativeHandle.sendProxy("image");
+		var proxy = getNativeHandle().sendProxy("image");
 
 		return new NSImage(proxy);
 	}
 
 	public void setBezelSstyle(NSBezelStyle value) {
-		nativeHandle.send("setBezelStyle:", value.id);
+		getNativeHandle().send("setBezelStyle:", value.id);
 	}
 
 	public void setButtonType(NSButtonType value) {
-		nativeHandle.send("setButtonType:", value.id);
+		getNativeHandle().send("setButtonType:", value.id);
 	}
 
 	@Msg(selector = "onAction:", signature = "v@:@")
@@ -95,17 +95,17 @@ public class NSButton extends NSView {
 	}
 
 	public void setTarget(NSObject eventReceiver) {
-		nativeHandle.send("setTarget:", eventReceiver);
+		getNativeHandle().send("setTarget:", eventReceiver);
 	}
 
 	public void setAction(Consumer<NSButton> listener) {
 		this.actionListener = listener;
 
 		setTarget(this);
-		nativeHandle.send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
+		getNativeHandle().send("setAction:", listener != null ? RuntimeUtils.sel("onAction:") : null);
 	}
 
 	public void setEnabled(boolean value) {
-		nativeHandle.send("setEnabled:", value);
+		getNativeHandle().send("setEnabled:", value);
 	}
 }

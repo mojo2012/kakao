@@ -37,15 +37,15 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	public void setAllowsUserCustomization(boolean value) {
-		nativeHandle.send("setAllowsUserCustomization:", value);
+		getNativeHandle().send("setAllowsUserCustomization:", value);
 	}
 
 	public void setAutosavesConfiguration(boolean value) {
-		nativeHandle.send("setAutosavesConfiguration:", value);
+		getNativeHandle().send("setAutosavesConfiguration:", value);
 	}
 
 	public void setDisplayMode(NSToolbarDisplayMode mode) {
-		nativeHandle.send("setDisplayMode:", mode.id);
+		getNativeHandle().send("setDisplayMode:", mode.id);
 	}
 
 	public void insertItem(NSToolbarItem item, int index) {
@@ -70,17 +70,17 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	 * @param index
 	 */
 	public void insertItemWithItemIdentifier(String identifier, int index) {
-		nativeHandle.send("insertItemWithItemIdentifier:atIndex:", identifier, index);
+		getNativeHandle().send("insertItemWithItemIdentifier:atIndex:", identifier, index);
 	}
 
 	public Collection<NSToolbarItem> getItems() {
-//		var nsArray = new NSArray<>(nativeHandle.sendProxy("items"), NSToolbarItem.class);
+//		var nsArray = new NSArray<>(getNativeHandle().sendProxy("items"), NSToolbarItem.class);
 
 		return Collections.unmodifiableCollection(items.values());
 	}
 
 	public void setDelegate(NSObject delegate) {
-		nativeHandle.send("setDelegate:", this);
+		getNativeHandle().send("setDelegate:", this);
 	}
 
 	@Override
@@ -106,14 +106,14 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 	}
 
 	public void removeItemAtIndex(int index) {
-		nativeHandle.send("removeItemAtIndex:", index);
+		getNativeHandle().send("removeItemAtIndex:", index);
 
 		var id = (new LinkedList<String>(items.keySet())).get(index);
 		items.remove(id);
 	}
 
 	public NSToolbarItem selectedItemIdentifier() {
-		var id = nativeHandle.sendProxy("selectedItemIdentifier");
+		var id = getNativeHandle().sendProxy("selectedItemIdentifier");
 
 		if (id != null) {
 			return items.get(id.toString());

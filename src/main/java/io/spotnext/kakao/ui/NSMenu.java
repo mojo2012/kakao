@@ -18,15 +18,15 @@ public class NSMenu extends NSObject {
 	}
 
 	public void setAutoenablesItems(boolean value) {
-		nativeHandle.send("setAutoenablesItems:", value);
+		getNativeHandle().send("setAutoenablesItems:", value);
 	}
 
 	private void addItem(NSMenuItem mainItem) {
-		nativeHandle.send("addItem:", mainItem.getNativeHandle());
+		getNativeHandle().send("addItem:", mainItem.getNativeHandle());
 	}
 
 	private NSMenuItem addItem(String title, Consumer<NSMenuItem> handler, String keyEquivalent) {
-//		var proxy = nativeHandle.sendProxy("addItemWithTitle:action:keyEquivalent:", string, null, keyEquivalent);
+//		var proxy = getNativeHandle().sendProxy("addItemWithTitle:action:keyEquivalent:", string, null, keyEquivalent);
 
 		var item = new NSMenuItem(title, handler, keyEquivalent);
 		addItem(item);

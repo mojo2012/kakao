@@ -7,19 +7,20 @@ public class NSTableHeaderCell extends NSObject {
 	public NSTableHeaderCell(String text) {
 		super("NSTableHeaderCell", false);
 
-		nativeHandle = init(alloc(nativeClassName, SELECTOR_ALLOC), "initTextCell:", text);
+		var proxy = init(alloc(getNativeClassName(), SELECTOR_ALLOC), "initTextCell:", text);
+		initWithProxy(proxy);
 	}
 
 	public NSTableHeaderCell(Proxy proxy) {
 		super(proxy);
 	}
-	
+
 	public void setStringValue(String value) {
-		nativeHandle.send("setStringValue:", value);
+		getNativeHandle().send("setStringValue:", value);
 	}
-	
+
 	public String getStringValue() {
-		return nativeHandle.sendString("stringValue");
+		return getNativeHandle().sendString("stringValue");
 	}
 
 }
