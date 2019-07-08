@@ -1,6 +1,7 @@
 package io.spotnext.kakao;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,11 +18,14 @@ import io.spotnext.kakao.exceptions.PropertyAccessException;
 import io.spotnext.kakao.structs.NSBindingName;
 import io.spotnext.kakao.structs.NSBindingOption;
 import io.spotnext.support.util.ClassUtil;
+import javassist.util.proxy.MethodFilter;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
 
 public abstract class NSObject extends ca.weblite.objc.NSObject {
 
 	private static Map<Pointer, NSObject> INSTANCE_CACHE = new ConcurrentHashMap<>();
-	
+
 	public static final String SELECTOR_ALLOC = "alloc";
 	public static final String SELECTOR_INIT = "init";
 
@@ -76,11 +80,11 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		}
 
 		this.nativeHandle = proxy;
-		
+
 		registerInstance(proxy.getPeer());
 		registerInstance(getPeer());
 	}
-	
+
 	protected void registerInstance(Pointer peer) {
 		INSTANCE_CACHE.put(peer, this);
 	}
@@ -181,23 +185,91 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	public String toString() {
 		return this.getClass().getName();
 	}
-	
-	protected Proxy getAnimator() {
+
+	protected Proxy getAnimatorProxy() {
 		var animatorProxy = nativeHandle.sendProxy("animator");
-		
+
 		return animatorProxy;
 	}
-	
-	
+
+	public <T extends NSObject> T getAnimator() {
+		var animatorProxy = nativeHandle.sendProxy("animator");
+
+//		T animator;
+//		try {
+//			animator = (T) new ByteBuddy().subclass(this.getClass())
+//				.method(ElementMatchers.any()
+//						.and(ElementMatchers.not(ElementMatchers.named("clone"))))
+//					.intercept(MethodDelegation.to(MethodInterceptor.class))
+//				.method(ElementMatchers.named("getNativeHandle"))
+//					.intercept(FixedValue.value(getAnimatorProxy()))
+//				.make()
+//				.load(MethodInterceptor.class.getClassLoader())
+//				.getLoaded()
+//				.getConstructor(Object.class)
+//				.newInstance(this);
+//		} catch (Exception  e) {
+//			throw new IllegalStateException(e);
+//		}
+
+		ProxyFactory f = new ProxyFactory();
+		f.setSuperclass(this.getClass());
+		f.setFilter(new MethodFilter() {
+			@Override
+			public boolean isHandled(Method m) {
+//				if (!m.getName().equals("clone")
+				return true;
+			}
+		});
+
+		final var realObject = this;
+		
+		Object animator = null;
+		try {
+			animator = f.create(new Class[0], new Object[0]);
+			var mi = new MethodHandler() {
+				public Object invoke(Object self, Method m, Method proceed, Object[] args) throws Throwable {
+					if (m.getName().contentEquals("getNativeHandle")) {
+						return animatorProxy;
+					}
+					
+					return proceed.invoke(realObject, args);
+				}
+			};
+
+			((javassist.util.proxy.Proxy) animator).setHandler(mi);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return (T) animator;
+	}
+
 	protected void animate(Consumer<Proxy> consumer) {
 		execute(getAnimator(), consumer);
 	}
-	
+
 	protected void execute(Consumer<Proxy> consumer) {
 		execute(getNativeHandle(), consumer);
 	}
-	
+
 	protected void execute(Proxy proxy, Consumer<Proxy> consumer) {
 		consumer.accept(proxy);
 	}
+//	
+//	public static class MethodInterceptor
+//	{
+//		private Object realObject;
+//
+//		public MethodInterceptor(Object realObject) {
+//			this.realObject = realObject;
+//		}
+//		
+////	    @RuntimeType
+//	    public Object methodCalled(@SuperCall Callable<?> superCall, @This Object self, @Origin Method method) throws Exception
+//	    {
+//	        return superCall.call();
+//	    }
+//
+//	}
 }

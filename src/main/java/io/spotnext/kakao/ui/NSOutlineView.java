@@ -135,11 +135,11 @@ public class NSOutlineView extends NSView {
 	}
 
 	public void expandItem(DataNode node, boolean expandChildren) {
-		animate(p -> p.send("expandItem:expandChildren:", node, expandChildren));
+		nativeHandle.send("expandItem:expandChildren:", node, expandChildren);
 	}
 
 	public void collapseItem(DataNode node) {
-		animate(p -> p.send("collapseItem:", node));
+		nativeHandle.send("collapseItem:", node);
 	}
 
 	public void expandItem(DataNode node) {
