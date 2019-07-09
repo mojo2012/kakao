@@ -200,20 +200,4 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	protected void execute(Proxy proxy, Consumer<Proxy> consumer) {
 		consumer.accept(proxy);
 	}
-//	
-//	public static class MethodInterceptor
-//	{
-//		private Object realObject;
-//
-//		public MethodInterceptor(Object realObject) {
-//			this.realObject = realObject;
-//		}
-//		
-////	    @RuntimeType
-//	    public Object methodCalled(@SuperCall Callable<?> superCall, @This Object self, @Origin Method method) throws Exception
-//	    {
-//	        return superCall.call();
-//	    }
-//
-//	}
 }
