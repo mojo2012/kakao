@@ -10,12 +10,16 @@ public class NSScrollView extends NSView {
 		super(proxy);
 	}
 
-	public NSScrollView(NSRect frame) {
-		super("NSScrollView", frame);
-		
+	protected NSScrollView(String className, NSRect frame) {
+		super(className, frame);
+
 		setHorizontalScroller(true);
 		setVerticalScroller(true);
 		setAutohideScroller(true);
+	}
+
+	public NSScrollView(NSRect frame) {
+		this("NSScrollView", frame);
 	}
 
 	public void setIdentifier(String identifier) {
@@ -41,7 +45,7 @@ public class NSScrollView extends NSView {
 	public boolean hasHorizontalScroller() {
 		return getNativeHandle().getBoolean("hasHorizontalScroller");
 	}
-	
+
 	public void setAutohideScroller(boolean value) {
 		getNativeHandle().send("setAutohidesScrollers:", value);
 	}
