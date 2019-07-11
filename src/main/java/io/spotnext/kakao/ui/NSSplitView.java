@@ -4,13 +4,13 @@ import org.rococoa.cocoa.CGFloat;
 
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
-import io.spotnext.kakao.structs.Orientation;
+import io.spotnext.kakao.structs.NSUserInterfaceLayoutOrientation;
 
 public class NSSplitView extends NSView {
 
 	public NSSplitView(NSRect frame) {
 		super("NSSplitView", frame);
-		
+
 		// if not set then the nswindow bottom right corners will be over-drawn
 		setWantsLayer(true);
 	}
@@ -27,18 +27,14 @@ public class NSSplitView extends NSView {
 		getNativeHandle().send("arrangesAllSubviews");
 	}
 
-	public void setOrientation(Orientation value) {
-		if (Orientation.Vertical.equals(value)) {
-			getNativeHandle().send("setVertical:", 1);
-		} else {
-			getNativeHandle().send("setVertical:", 0);
-		}
+	public void setOrientation(NSUserInterfaceLayoutOrientation value) {
+		getNativeHandle().send("setVertical:", value.id);
 	}
 
-	public Orientation getOrientation() {
+	public NSUserInterfaceLayoutOrientation getOrientation() {
 		var isVertical = getNativeHandle().sendBoolean("isVertical");
 
-		return isVertical ? Orientation.Vertical : Orientation.Horizontal;
+		return isVertical ? NSUserInterfaceLayoutOrientation.Vertical : NSUserInterfaceLayoutOrientation.Horizontal;
 	}
 
 	public void setDividerStyle(NSSplitViewDividerStyle value) {

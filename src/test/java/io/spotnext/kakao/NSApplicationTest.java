@@ -12,7 +12,7 @@ import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.structs.NSImageName;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.NSWindowTitleVisibility;
-import io.spotnext.kakao.structs.Orientation;
+import io.spotnext.kakao.structs.NSUserInterfaceLayoutOrientation;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
 import io.spotnext.kakao.support.NSOutlineViewDataSource;
 import io.spotnext.kakao.support.NSOutlineViewDelegate;
@@ -64,7 +64,7 @@ public class NSApplicationTest {
 
 		var splitView = new NSSplitView(bounds);
 		splitView.setDividerStyle(NSSplitViewDividerStyle.Thin);
-		splitView.setOrientation(Orientation.Vertical);
+		splitView.setOrientation(NSUserInterfaceLayoutOrientation.Vertical);
 
 		splitView.getDividerStyle();
 

@@ -1,5 +1,7 @@
 package io.spotnext.kakao.ui;
 
+import com.sun.jna.Pointer;
+
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
@@ -108,5 +110,11 @@ public class NSView extends NSObject {
 
 	public void setCanDrawSubviewsIntoLayer(boolean value) {
 		getNativeHandle().send("setCanDrawSubviewsIntoLayer:", value);
+	}
+
+	public NSRect getFrame() {
+		var frame = (long) getNativeHandle().send("frame");
+
+		return new NSRect(new Pointer(frame));
 	}
 }

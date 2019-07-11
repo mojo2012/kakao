@@ -8,4 +8,5 @@ public enum NSBorderType {
 	private NSBorderType(long id) {
 		this.id = id;
 	}
+
 }

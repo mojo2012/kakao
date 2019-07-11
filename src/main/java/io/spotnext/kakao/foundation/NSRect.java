@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.rococoa.cocoa.CGFloat;
+
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 
@@ -51,6 +53,10 @@ public class NSRect extends Structure implements Structure.ByValue {
 	public NSRect(Proxy proxy) {
 		this.origin = new NSPoint(proxy.getProxy("origin"));
 		this.size = new NSSize(proxy.getProxy("size"));
+	}
+
+	public NSRect(NSRect original) {
+		this(original.origin.x, original.origin.y, original.size.width, original.size.height);
 	}
 
 	public NSRect() {
@@ -80,6 +86,10 @@ public class NSRect extends Structure implements Structure.ByValue {
 	public NSRect(double x, double y, double w, double h) {
 		this.origin = new NSPoint(x, y);
 		this.size = new NSSize(w, h);
+	}
+
+	public NSRect(CGFloat x, CGFloat y, CGFloat width, CGFloat height) {
+		this(x.doubleValue(), y.doubleValue(), width.doubleValue(), height.doubleValue());
 	}
 
 	public Rectangle2D getBounds() {

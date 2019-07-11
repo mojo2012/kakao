@@ -48,7 +48,8 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	/**
 	 * Pass an already initialized objective-c instance.
 	 * 
-	 * @param proxy the already initialized (eg. alloc/init already done) proxy object
+	 * @param proxy the already initialized (eg. alloc/init already done) proxy
+	 *              object
 	 */
 	protected NSObject(Proxy proxy) {
 		super("NSObject");
@@ -151,8 +152,10 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	/**
-	 * Gets the value for the given property. If the value is an {@link NSObject} then its native handle (using {@link #getNativeHandle()}) will be returned
-	 * instead of the actual object. If this behavior is not desired, the method must be overridden.
+	 * Gets the value for the given property. If the value is an {@link NSObject}
+	 * then its native handle (using {@link #getNativeHandle()}) will be returned
+	 * instead of the actual object. If this behavior is not desired, the method
+	 * must be overridden.
 	 * 
 	 * @param key property
 	 * @return
@@ -167,6 +170,22 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		}
 
 		return value;
+	}
+
+	@Msg(selector = "setValue:forKey:", signature = "v@:@@")
+	public void setValueForKey(String key, Object value) {
+		ClassUtil.setField(this, key, value);
+		getNativeHandle().send("setValue:forKey:", value, key);
+	}
+	
+	@Msg(selector = "setValue:forKeyPath:", signature = "v@:@@")
+	public void setValueForKeyPath(String key, Object value) {
+		ClassUtil.setField(this, key, value);
+	}
+	
+	@Msg(selector = "setValue:forUndefinedKey:", signature = "v@:@@")
+	public void setValueForUndefinedKey(String key, Object value) {
+		setValueForKeyPath(key, value);
 	}
 
 	@Msg(selector = "valueForUndefinedKey:", signature = "@@:@")
