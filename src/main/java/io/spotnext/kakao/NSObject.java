@@ -8,6 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sun.jna.Pointer;
 
 import ca.weblite.objc.Client;
@@ -24,6 +27,7 @@ import javassist.util.proxy.ProxyFactory;
 
 public abstract class NSObject extends ca.weblite.objc.NSObject {
 
+	private static Logger LOG = LoggerFactory.getLogger(NSObject.class);
 	private static Map<Pointer, NSObject> INSTANCE_CACHE = new ConcurrentHashMap<>();
 
 	public static final String SELECTOR_ALLOC = "alloc";
@@ -177,12 +181,12 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		ClassUtil.setField(this, key, value);
 		getNativeHandle().send("setValue:forKey:", value, key);
 	}
-	
+
 	@Msg(selector = "setValue:forKeyPath:", signature = "v@:@@")
 	public void setValueForKeyPath(String key, Object value) {
 		ClassUtil.setField(this, key, value);
 	}
-	
+
 	@Msg(selector = "setValue:forUndefinedKey:", signature = "v@:@@")
 	public void setValueForUndefinedKey(String key, Object value) {
 		setValueForKeyPath(key, value);
@@ -191,6 +195,21 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	@Msg(selector = "valueForUndefinedKey:", signature = "@@:@")
 	public Object valueForUndefinedKey(Proxy key) throws PropertyAccessException {
 		throw new PropertyAccessException("Call to unknown property " + key.toString());
+	}
+
+	@Msg(selector = "addObserver:forKeyPath:options:context:", signature = "v@:@@@")
+	public void addObserverForKeyPathOptionsContext(Object observer, Object keyPath, Object options,
+			Object context) {
+		LOG.debug("addObserverForKeyPathOptionsContext");
+		return;
+	}
+
+	@Msg(selector = "observeValueForKeyPath:ofObject:change:context:", signature = "v@:@@@")
+	public void observeValueForKeyPathOfObjectChangeContext(Object keyPath, Object object, Object change,
+			Object context) {
+		
+		LOG.debug("observeValueForKeyPathOfObjectChangeContext");
+		return;
 	}
 
 	public String description() {

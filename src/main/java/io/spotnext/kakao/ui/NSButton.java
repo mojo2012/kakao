@@ -18,6 +18,10 @@ public class NSButton extends NSView {
 
 	private Consumer<NSButton> actionListener;
 
+	public NSButton(Proxy proxy) {
+		super(proxy);
+	}
+	
 	public NSButton(String title) {
 		this(title, (NSImage) null);
 	}

@@ -1,11 +1,14 @@
 package io.spotnext.kakao.ui;
 
+import java.util.List;
+
 import com.sun.jna.Pointer;
 
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
+import io.spotnext.kakao.structs.NSArray;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
 import io.spotnext.kakao.structs.NSFocusRingType;
 
@@ -116,5 +119,11 @@ public class NSView extends NSObject {
 		var frame = (long) getNativeHandle().send("frame");
 
 		return new NSRect(new Pointer(frame));
+	}
+	
+	public List<NSView> getSubViews() {
+		var subviewsArray = getNativeHandle().sendProxy("subviews");
+		
+		return null;
 	}
 }
