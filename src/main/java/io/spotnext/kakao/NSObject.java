@@ -1,17 +1,20 @@
 package io.spotnext.kakao;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.security.KeyPair;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
@@ -21,14 +24,12 @@ import io.spotnext.kakao.exceptions.PropertyAccessException;
 import io.spotnext.kakao.structs.NSBindingName;
 import io.spotnext.kakao.structs.NSBindingOption;
 import io.spotnext.support.util.ClassUtil;
-import javassist.util.proxy.MethodFilter;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
 
 public abstract class NSObject extends ca.weblite.objc.NSObject {
 
-	private static Logger LOG = LoggerFactory.getLogger(NSObject.class);
-	private static Map<Pointer, NSObject> INSTANCE_CACHE = new ConcurrentHashMap<>();
+	private static final Logger LOG = LoggerFactory.getLogger(NSObject.class);
+	private static final Map<Pointer, NSObject> INSTANCE_CACHE = new ConcurrentHashMap<>();
+	private final Map<String, Proxy> observers = new HashMap<>();
 
 	public static final String SELECTOR_ALLOC = "alloc";
 	public static final String SELECTOR_INIT = "init";
@@ -52,8 +53,7 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	/**
 	 * Pass an already initialized objective-c instance.
 	 * 
-	 * @param proxy the already initialized (eg. alloc/init already done) proxy
-	 *              object
+	 * @param proxy the already initialized (eg. alloc/init already done) proxy object
 	 */
 	protected NSObject(Proxy proxy) {
 		super("NSObject");
@@ -91,6 +91,10 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 
 	protected void registerInstance(Pointer peer) {
 		INSTANCE_CACHE.put(peer, this);
+	}
+
+	public static boolean isRegisteredInstance(Pointer pointer) {
+		return INSTANCE_CACHE.containsKey(pointer);
 	}
 
 	public static <T extends NSObject> T getInstance(Pointer pointer) {
@@ -156,10 +160,8 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 	}
 
 	/**
-	 * Gets the value for the given property. If the value is an {@link NSObject}
-	 * then its native handle (using {@link #getNativeHandle()}) will be returned
-	 * instead of the actual object. If this behavior is not desired, the method
-	 * must be overridden.
+	 * Gets the value for the given property. If the value is an {@link NSObject} then its native handle (using {@link #getNativeHandle()}) will be returned
+	 * instead of the actual object. If this behavior is not desired, the method must be overridden.
 	 * 
 	 * @param key property
 	 * @return
@@ -176,39 +178,92 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 		return value;
 	}
 
+	public void setValue(String property, Object value) {
+		final Object val;
+
+		if (value instanceof Boolean) {
+			val = new IntByReference((boolean) value ? 1 : 0).getPointer();
+		} else {
+			val = value;
+		}
+
+		if (!isWrapper()) {
+			// do we really have to go to objc and then back?
+			send("setValue:forKey:", val, property);
+		} else {
+			// if we call the native object, we don't have to call the obeservers manually
+			getNativeHandle().send("setValue:forKey:", val, property);
+		}
+	}
+
 	@Msg(selector = "setValue:forKey:", signature = "v@:@@")
-	public void setValueForKey(String key, Object value) {
-		ClassUtil.setField(this, key, value);
-		getNativeHandle().send("setValue:forKey:", value, key);
+	public void setValueForKey(Object value, Object key) {
+		var property = key instanceof String ? (String) key : key.toString();
+		var val = value;
+
+		if (value instanceof Proxy) {
+			var peer = ((Proxy) value).getPeer();
+
+			if (NSObject.isRegisteredInstance(peer)) {
+				value = NSObject.getInstance(((Proxy) value).getPeer());
+			}
+		}
+
+		ClassUtil.setProperty(this, property, val);
+		
+		var observer = observers.get(property);
+
+		if (observer != null) {
+			// TODO: send real change data and context
+			observer.send("observeValueForKeyPath:ofObject:change:context:", property, this, null, null);
+		}
 	}
 
 	@Msg(selector = "setValue:forKeyPath:", signature = "v@:@@")
-	public void setValueForKeyPath(String key, Object value) {
-		ClassUtil.setField(this, key, value);
+	public void setValueForKeyPath(Object value, Object key) {
+		setValueForKey(value, key);
 	}
 
 	@Msg(selector = "setValue:forUndefinedKey:", signature = "v@:@@")
-	public void setValueForUndefinedKey(String key, Object value) {
-		setValueForKeyPath(key, value);
+	public void setValueForUndefinedKey(Object value, Object key) {
+		setValueForKeyPath(value, key);
 	}
 
 	@Msg(selector = "valueForUndefinedKey:", signature = "@@:@")
-	public Object valueForUndefinedKey(Proxy key) throws PropertyAccessException {
+	public Object valueForUndefinedKey(Object key) throws PropertyAccessException {
 		throw new PropertyAccessException("Call to unknown property " + key.toString());
 	}
 
 	@Msg(selector = "addObserver:forKeyPath:options:context:", signature = "v@:@@@")
-	public void addObserverForKeyPathOptionsContext(Object observer, Object keyPath, Object options,
-			Object context) {
+	public void addObserverForKeyPathOptionsContext(NSObject observer, String keyPath, NSObject options,
+			NSObject context) {
+
 		LOG.debug("addObserverForKeyPathOptionsContext");
+
+		if (isWrapper()) {
+			getNativeHandle().send("addObserver:forKeyPath:options:context:", observer, keyPath, options, context);
+		} else {
+			if (keyPath.contains(".")) {
+				throw new NotImplementedException("Nested keypaths are not supported");
+			}
+
+			observers.put(keyPath, observer);
+		}
+
 		return;
 	}
 
-	@Msg(selector = "observeValueForKeyPath:ofObject:change:context:", signature = "v@:@@@")
+	@Msg(selector = "observeValueForKeyPath:ofObject:change:context:", signature = "v@:@@@@")
 	public void observeValueForKeyPathOfObjectChangeContext(Object keyPath, Object object, Object change,
 			Object context) {
-		
+
 		LOG.debug("observeValueForKeyPathOfObjectChangeContext");
+
+		if (isWrapper()) {
+			getNativeHandle().send("observeValueForKeyPath:ofObject:change:context:", keyPath, object, change, context);
+		}
+		// else consume notification
+
 		return;
 	}
 
@@ -237,5 +292,9 @@ public abstract class NSObject extends ca.weblite.objc.NSObject {
 
 	protected void execute(Proxy proxy, Consumer<Proxy> consumer) {
 		consumer.accept(proxy);
+	}
+
+	protected boolean isWrapper() {
+		return !getNativeClassName().equals("NSObject");
 	}
 }
