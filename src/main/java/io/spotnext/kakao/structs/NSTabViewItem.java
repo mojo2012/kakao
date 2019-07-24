@@ -3,6 +3,7 @@ package io.spotnext.kakao.structs;
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
+import io.spotnext.kakao.ui.NSView;
 
 public class NSTabViewItem extends NSObject {
 
@@ -43,6 +44,10 @@ public class NSTabViewItem extends NSObject {
 
 	public String getLabel() {
 		return getNativeHandle().sendString("label");
+	}
+
+	public void setView(NSView view) {
+		getNativeHandle().send("setView:", view.getNativeHandle());
 	}
 
 }
