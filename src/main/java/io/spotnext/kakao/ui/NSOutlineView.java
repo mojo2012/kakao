@@ -13,6 +13,7 @@ import io.spotnext.kakao.structs.NSTableViewRowSizeStyle;
 import io.spotnext.kakao.structs.SelectionHighlightStyle;
 import io.spotnext.kakao.support.NSOutlineViewDataSource;
 import io.spotnext.kakao.support.NSOutlineViewDelegate;
+import io.spotnext.kakao.util.ThreadUtil;
 
 public class NSOutlineView extends NSView {
 
@@ -152,7 +153,7 @@ public class NSOutlineView extends NSView {
 	@Msg(selector = "onDoubleClick", signature = "v@:")
 	public void onDoubleClick() {
 		if (doubleClickHandler != null) {
-			doubleClickHandler.accept(this, this.getClickedRow());
+			ThreadUtil.performOnMainThread(() -> doubleClickHandler.accept(this, this.getClickedRow()));
 		}
 	}
 

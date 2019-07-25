@@ -7,6 +7,7 @@ import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.structs.DataNode;
 import io.spotnext.kakao.ui.NSOutlineView;
+import io.spotnext.kakao.util.ThreadUtil;
 
 public abstract class NSOutlineViewDelegate extends NSObject {
 
@@ -29,7 +30,7 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 
 		var textField = view.getTextField();
 		textField.setText(item.send("title").toString());
-		
+
 //		if (item.sendBoolean("isHeader")) {
 //			textField.
 //		}
@@ -55,7 +56,7 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 		if (eventHandler != null) {
 			var selectedItem = outlineView.getSelectedItem();
 
-			eventHandler.accept(selectedItem);
+			ThreadUtil.performOnMainThread(() -> eventHandler.accept(selectedItem));
 		}
 	}
 
@@ -67,12 +68,12 @@ public abstract class NSOutlineViewDelegate extends NSObject {
 	public boolean outlineViewGroupHeader(Proxy outlineView, Proxy item) {
 		return isGroupHeader(item);
 	}
-	
-	@Msg(selector = "outlineView:shouldSelectItem:" , signature = "c@:@@")
+
+	@Msg(selector = "outlineView:shouldSelectItem:", signature = "c@:@@")
 	public boolean outlineViewShouldSelectItem(Proxy outlineView, Proxy item) {
 		return !isGroupHeader(item);
 	}
-	
+
 	private boolean isGroupHeader(Proxy item) {
 		return item.sendBoolean("isHeader");
 	}

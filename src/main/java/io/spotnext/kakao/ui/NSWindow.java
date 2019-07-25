@@ -40,7 +40,7 @@ public class NSWindow extends NSView {
 	}
 
 	public NSWindow(NSRect frame) {
-		this(frame, NSBackingStoreType.NSBackingStoreBuffered, false, DEFAULT_STYLES);
+		this(frame, NSBackingStoreType.Buffered, false, DEFAULT_STYLES);
 	}
 
 	public NSWindow() {
@@ -57,7 +57,7 @@ public class NSWindow extends NSView {
 
 	protected Proxy initWithDefaults(Proxy proxy) {
 		return initWithRect(proxy, new NSRect(100, 100, 800, 600), DEFAULT_STYLE_MASK,
-				NSBackingStoreType.NSBackingStoreBuffered, false);
+				NSBackingStoreType.Buffered, false);
 	}
 
 	protected Proxy initWithRect(Proxy proxy, NSRect rect, long styleMask, NSBackingStoreType backing, boolean defer) {

@@ -35,4 +35,20 @@ public class NSTabView extends NSView {
 		getNativeHandle().send("addTabViewItem:", item.getNativeHandle());
 	}
 
+	public int getNumberOfTabViewItems() {
+		return getNativeHandle().sendInt("numberOfTabViewItems");
+	}
+	
+	public NSTabViewItem getTabViewItemAtIndex(int index) {
+		var proxy = getNativeHandle().sendProxy("tabViewItemAtIndex:", index);
+		
+		return NSObject.getInstance(proxy.getPeer());
+	}
+	
+	public void selectTabViewItem(int index) {
+		var item = getTabViewItemAtIndex(index);
+		
+		getNativeHandle().send("selectTabViewItem:", item.getNativeHandle());
+	}
+
 }

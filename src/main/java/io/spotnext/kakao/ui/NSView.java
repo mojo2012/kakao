@@ -8,8 +8,9 @@ import ca.weblite.objc.Proxy;
 import io.spotnext.kakao.NSObject;
 import io.spotnext.kakao.foundation.NSRect;
 import io.spotnext.kakao.foundation.NSSize;
-import io.spotnext.kakao.structs.NSArray;
+import io.spotnext.kakao.structs.CALayer;
 import io.spotnext.kakao.structs.NSAutoresizingMaskOptions;
+import io.spotnext.kakao.structs.NSColor;
 import io.spotnext.kakao.structs.NSFocusRingType;
 
 public class NSView extends NSObject {
@@ -41,6 +42,10 @@ public class NSView extends NSObject {
 		if (frame != null) {
 			initWithProxy(init(alloc(className, SELECTOR_ALLOC), "initWithFrame:", frame));
 		}
+		
+
+		// if not set then the nswindow bottom right corners will be over-drawn
+		setWantsLayer(true);
 	}
 
 	/**
@@ -74,10 +79,6 @@ public class NSView extends NSObject {
 		getNativeHandle().send("setFocusRingType:", value.id);
 	}
 
-	public void wantsLayer(boolean visible) {
-		getNativeHandle().set("wantsLayer", visible);
-	}
-
 	public boolean wantsLayer() {
 		return getNativeHandle().getBoolean("wantsLayer");
 	}
@@ -101,13 +102,17 @@ public class NSView extends NSObject {
 
 		getNativeHandle().send("setAutoresizingMask:", mask);
 	}
-//
-//	public void setBackgroundColor(String string) {
-//		var layerProxy = getNativeHandle().sendProxy("layer");
-//		layerProxy.send("setBackgroundColor:", )
-//	}
+
+	public void setBackgroundColor(NSColor color) {
+		var layerProxy = getNativeHandle().getProxy("layer");
+
+		if (layerProxy != null) {
+			layerProxy.send("setBackgroundColor:", color.getNativeHandle().sendPointer("CGColor"));
+		}
+	}
 
 	public void setWantsLayer(boolean value) {
+		getNativeHandle().send("setLayer:", value ? new CALayer().getNativeHandle() : null);
 		getNativeHandle().send("setWantsLayer:", value);
 	}
 
@@ -120,10 +125,18 @@ public class NSView extends NSObject {
 
 		return new NSRect(new Pointer(frame));
 	}
-	
+
 	public List<NSView> getSubViews() {
 		var subviewsArray = getNativeHandle().sendProxy("subviews");
-		
+
 		return null;
+	}
+
+	public void updateLayer() {
+		getNativeHandle().send("updateLayer");
+	}
+	
+	public void refresh() {
+		getNativeHandle().send("setNeedsDisplay:", true);
 	}
 }

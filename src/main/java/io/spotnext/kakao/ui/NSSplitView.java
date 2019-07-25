@@ -10,9 +10,6 @@ public class NSSplitView extends NSView {
 
 	public NSSplitView(NSRect frame) {
 		super("NSSplitView", frame);
-
-		// if not set then the nswindow bottom right corners will be over-drawn
-		setWantsLayer(true);
 	}
 
 	public void adjustSubviews() {
