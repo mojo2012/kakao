@@ -85,10 +85,10 @@ public class NSToolbar extends NSObject implements NSToolbarDelegate {
 
 	@Override
 	@Msg(selector = "toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar:", signature = "@@:@@B")
-	public Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Proxy toolbar, Object itemIdentifier,
+	public Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Proxy toolbar, String itemIdentifier,
 			Boolean flag) {
 		// toString of an NSString is the actual string ;-) weird ...
-		var itemId = itemIdentifier.toString();
+		var itemId = itemIdentifier;
 
 		var item = items.get(itemId);
 

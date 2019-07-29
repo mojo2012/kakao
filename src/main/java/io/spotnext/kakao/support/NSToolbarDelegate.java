@@ -16,7 +16,7 @@ public interface NSToolbarDelegate {
 	 * @param willBeInsertedIntoToolbar
 	 * @return
 	 */
-	Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Proxy toolbar, Object itemIdentifier, Boolean willBeInsertedIntoToolbar);
+	Proxy toolbarItemForItemIdentifierwillBeInsertedIntoToolbar(Proxy toolbar, String itemIdentifier, Boolean willBeInsertedIntoToolbar);
 
 	/**
 	 * Note: why is there no toolbar argument supported?
