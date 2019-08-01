@@ -1,7 +1,6 @@
 package io.spotnext.kakao;
 
 import java.lang.reflect.InvocationTargetException;
-import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
