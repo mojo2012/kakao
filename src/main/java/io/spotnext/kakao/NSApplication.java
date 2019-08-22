@@ -7,7 +7,7 @@ import ca.weblite.objc.annotations.Msg;
 import io.spotnext.kakao.structs.ActivationPolicy;
 import io.spotnext.kakao.structs.NSImage;
 import io.spotnext.kakao.ui.NSMenu;
-import io.spotnext.kakao.util.Platform;
+import io.spotnext.kakao.util.PlatformUtil;
 
 public class NSApplication extends NSObject {
 
@@ -96,7 +96,7 @@ public class NSApplication extends NSObject {
 	}
 
 	public void setApplicationName(String name) {
-		Platform.MAC_OS.setProcessName(name);
+		PlatformUtil.getInstance().setProcessName(name);
 	}
 
 	public void setApplicationIconImage(String iconPath) {

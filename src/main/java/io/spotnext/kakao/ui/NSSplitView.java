@@ -3,6 +3,7 @@ package io.spotnext.kakao.ui;
 import org.rococoa.cocoa.CGFloat;
 
 import io.spotnext.kakao.foundation.NSRect;
+import io.spotnext.kakao.structs.NSLayoutPriority;
 import io.spotnext.kakao.structs.NSSplitViewDividerStyle;
 import io.spotnext.kakao.structs.NSUserInterfaceLayoutOrientation;
 
@@ -48,8 +49,12 @@ public class NSSplitView extends NSView {
 		getNativeHandle().send("setPosition:ofDividerAtIndex:", new CGFloat(value), dividerIndex);
 	}
 
-	public void setHoldingPriorityForSubview(double priority, int subviewIndex) {
-		getNativeHandle().send("setHoldingPriority:forSubviewAtIndex:", priority, subviewIndex);
+	public void setHoldingPriority(NSLayoutPriority priority, int subviewIndex) {
+		getNativeHandle().send("setHoldingPriority:forSubviewAtIndex:", priority.code, subviewIndex);
+	}
+
+	public void seTArrangesAllSubviews(boolean value) {
+		getNativeHandle().send("setArrangesAllSubviews:", value);
 	}
 
 }
